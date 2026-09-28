@@ -1,54 +1,65 @@
-<div class="conteiner">
-    <div class="form-container">
+<main class="ww auth">
+  <section class="auth-intro" aria-labelledby="login-title">
+    <h1 id="login-title" class="auth-title">
+      <span class="quiet">Vuelve a</span>
+      <span class="pressure">tu rama.</span>
+    </h1>
+    <p class="auth-lede">
+      Entra para seguir con tu portafolio o para revisar las postulaciones a tus ofertas.
+    </p>
+  </section>
 
-        <form [formGroup]="loginForm" autocomplete="off" class="example-form">
-            <H1>Inicio de Sesión</H1>
-            <mat-form-field class="example-full-width">
-                <mat-label>Username</mat-label>
-                <input matInput type="text" placeholder="username" formControlName="username" required>
-            </mat-form-field>
+  <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+    <div class="ww-lane">
+      <div class="ww-commit" [class.is-done]="loginForm.get('username')?.valid">
+        <div class="ww-field">
+          <label class="ww-commit-title" for="login-username">Nombre de usuario</label>
+          <input id="login-username" class="ww-input" type="text" formControlName="username"
+                 autocomplete="username" autocapitalize="none" spellcheck="false"
+                 [class.is-invalid]="invalid('username')"
+                 [attr.aria-invalid]="invalid('username')">
+          @if (invalid('username')) {
+            <p class="ww-field-error">Escribe tu nombre de usuario.</p>
+          }
+        </div>
+      </div>
 
-
-          <mat-form-field class="example-full-width" style="color: black">
-            <mat-label>Password</mat-label>
-            <input matInput [type]="hide() ? 'password' : 'text'" placeholder="password" formControlName="password" required/>
-            <button
-              mat-icon-button
-              matSuffix
-              (click)="clickEvent($event)"
-              [attr.aria-label]="'Hide password'"
-              [attr.aria-pressed]="hide()"
-            >
-              <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <div class="ww-commit" [class.is-done]="loginForm.get('password')?.valid">
+        <div class="ww-field">
+          <label class="ww-commit-title" for="login-password">Contraseña</label>
+          <div class="ww-password">
+            <input id="login-password" class="ww-input" [type]="hide() ? 'password' : 'text'"
+                   formControlName="password" autocomplete="current-password"
+                   [class.is-invalid]="invalid('password')"
+                   [attr.aria-invalid]="invalid('password')">
+            <button type="button" class="ww-reveal" (click)="togglePassword()"
+                    [attr.aria-pressed]="!hide()"
+                    [attr.aria-label]="hide() ? 'Mostrar contraseña' : 'Ocultar contraseña'">
+              @if (hide()) {
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>
+              } @else {
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.8 0 3.4-.5 4.8-1.3M9.9 9.9a3 3 0 0 0 4.2 4.2" /></svg>
+              }
             </button>
-          </mat-form-field>
-
-            <button class="button" (click)="login()" color="primary">Login</button>
-
-        </form>
-
-        <div class="social-message">
-            <div class="line"></div>
-            <p class="message">Login with social accounts</p>
-            <div class="line"></div>
+          </div>
+          @if (invalid('password')) {
+            <p class="ww-field-error">Escribe tu contraseña.</p>
+          }
         </div>
-
-        <div class="iconos">
-            <a href="https://www.google.com.pe/?hl=es"><mat-icon class="icono" svgIcon="googleIcon" aria-hidden="false"
-                    aria-label="Example thumbs up SVG icon"></mat-icon></a>
-            <a href="https://github.com/"><mat-icon class="icono" svgIcon="githubIcon" aria-hidden="false"
-                    aria-label="Example thumbs up SVG icon" ></mat-icon></a>
-            <a href="https://x.com/?lang=es"><mat-icon class="icono" svgIcon="xIcon" aria-hidden="false"
-                    aria-label="Example thumbs up SVG icon" ></mat-icon></a>
-            <a href="https://discord.com/"><mat-icon class="icono" svgIcon="discordIcon" aria-hidden="false"
-                    aria-label="Example thumbs up SVG icon" ></mat-icon></a>
-        </div>
-
-        <div>
-            <p class="signup">Don't have an account?
-                <a rel="noopener noreferrer" routerLink="/registrar" class="">Sign up</a>
-            </p>
-        </div>
+      </div>
     </div>
 
-</div>
+    <div class="auth-actions" aria-live="polite">
+      @if (errorMessage()) {
+        <p class="ww-alert" role="alert">{{ errorMessage() }}</p>
+      }
+      <button class="ww-button" type="submit" [disabled]="submitting()">
+        {{ submitting() ? 'Entrando…' : 'Iniciar sesión' }}
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+      </button>
+      <p class="auth-switch">
+        ¿Todavía no tienes cuenta? <a routerLink="/registrar">Crea una</a>
+      </p>
+    </div>
+  </form>
+</main>

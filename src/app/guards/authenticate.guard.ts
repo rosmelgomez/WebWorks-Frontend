@@ -1,35 +1,32 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
+import { catchError, map, of } from 'rxjs';
 
-export const authenticateGuard: CanActivateFn = (route, state) => {
+export const authenticateGuard: CanActivateFn = (route) => {
 
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Verificamos si el usuario está autenticado
   if (!authService.isLoggedIn()) {
-    router.navigate(['/']);
-    return false;
+    return router.createUrlTree(['/login']);
   }
 
- // Verificamos si la ruta tiene roles requeridos definidos
- const requiredRoles = route.data['role'] as Array<string>;
- if (!requiredRoles || requiredRoles.length === 0) {
-   // Si no hay roles definidos en la ruta, permitir acceso
-   return true;
- }
+  const validateRoles = () => {
+    const requiredRoles = route.data['role'] as Array<string> | undefined;
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
+    }
+    const userRole = authService.getRole() || '';
+    return requiredRoles.includes(userRole) ? true : router.createUrlTree(['/']);
+  };
 
-  // Obtener los roles del usuario desde AuthService
-  const userRoles = authService.getRole() || "";
-
-  // Verificar si el usuario tiene al menos uno de los roles requeridos
-  const hasRequiredRole = requiredRoles.some(role => userRoles.includes(role));
-
-  if (!hasRequiredRole) {
-    // Redirigir a una página de acceso no autorizado o a donde desees
-    router.navigate(['/']);
-    return false;
-  }
- return true;
+  // la sesion es valida mientras el backend acepte el api_token
+  return authService.apiToken().pipe(
+    map(() => validateRoles()),
+    catchError(() => {
+      authService.clearSession();
+      return of(router.createUrlTree(['/login']));
+    }),
+  );
 };

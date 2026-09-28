@@ -1,19 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {CommonModule, NgOptimizedImage} from "@angular/common";
-import { MatButtonModule} from "@angular/material/button";
-import { MatCardModule} from "@angular/material/card";
 import {RouterModule} from "@angular/router";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {User} from "../../../model/user";
 import {UserService} from "../../../services/user.service";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
-import {MatIconModule} from "@angular/material/icon";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {MatInputModule} from "@angular/material/input";
-import {NestedTreeControl} from "@angular/cdk/tree";
-import {MatTreeModule, MatTreeNestedDataSource} from "@angular/material/tree";
 import {RepositoryService} from "../../../services/repository.service";
 import {Repository} from "../../../model/repository";
 import {ProjectService} from "../../../services/project.service";
@@ -26,22 +15,12 @@ interface FoodNode {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-view-profile-user',
   standalone: true,
   imports: [
     CommonModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
     RouterModule,
-    MatCardModule,
-    MatTableModule,
-    MatSnackBarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTooltipModule,
-    RouterModule,
-    MatInputModule,
-    MatTreeModule, MatButtonModule, MatIconModule,
     NgOptimizedImage
   ],
   templateUrl: './view-profile-user.component.html',
@@ -49,13 +28,13 @@ interface FoodNode {
 })
 export class ViewProfileUserComponent implements OnInit{
 
-  treeControl = new NestedTreeControl<FoodNode>(node => node.children);
-  dataSource = new MatTreeNestedDataSource<FoodNode>();
-
-
-  hasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
-
-  dataSourceUser = new MatTableDataSource<User>()
+  dataSource = { data: [] as FoodNode[] };
+  dataSourceUser = { data: [] as User[] }
+  isUserLoading = true;
+  userError = '';
+  isRepositoriesLoading = true;
+  repositoriesError = '';
+  repositoryErrors: {[key: string]: string} = {};
   constructor(
     private userService: UserService,
     private repositoryService: RepositoryService,
@@ -68,22 +47,33 @@ export class ViewProfileUserComponent implements OnInit{
   }
 
   getUser() {
-    this.userService.getUserById(parseInt( this.userService.getSaveUserId())).subscribe((dataUser: User) => {
+    this.isUserLoading = true;
+    this.userService.getUserById(parseInt( this.userService.getSaveUserId())).subscribe({ next: (dataUser: User) => {
       this.dataSourceUser.data=[dataUser]
-    })
+      this.isUserLoading = false;
+    }, error: () => {
+      this.isUserLoading = false;
+      this.userError = 'No se pudo cargar el perfil.';
+    }})
   }
 
   getRepositoriesUser() {
   const TREE_DATA: FoodNode[] = [];
 
-  this.repositoryService.getRepositoryUserCompany( parseInt( this.userService.getSaveUserId())).subscribe((repositories: Repository[]) => {
+  this.isRepositoriesLoading = true;
+  this.repositoryService.getRepositoryUserCompany( parseInt( this.userService.getSaveUserId())).subscribe({ next: (repositories: Repository[]) => {
+    if (repositories.length === 0) {
+      this.dataSource.data = [];
+      this.isRepositoriesLoading = false;
+    }
+    let completed = 0;
     repositories.forEach((repository) => {
       const repositoryNode: FoodNode = {
         name: repository.name.toString(),
         children: []
       };
 
-      this.projectService.getProjectsRepositoryCompany(repository.id).subscribe((projects: Project[]) => {
+      this.projectService.getProjectsRepositoryCompany(repository.id).subscribe({ next: (projects: Project[]) => {
         repositoryNode.children = projects.map((project) => {
           const formattedDate = format(new Date(project.dateCreate), 'dd/MM/yyyy');
 
@@ -99,9 +89,20 @@ export class ViewProfileUserComponent implements OnInit{
 
         TREE_DATA.push(repositoryNode);
         this.dataSource.data = TREE_DATA;
-      });
+        completed++;
+        if (completed === repositories.length) this.isRepositoriesLoading = false;
+      }, error: () => {
+        this.repositoryErrors[repository.name.toString()] = 'No se pudieron cargar los proyectos.';
+        TREE_DATA.push(repositoryNode);
+        this.dataSource.data = TREE_DATA;
+        completed++;
+        if (completed === repositories.length) this.isRepositoriesLoading = false;
+      }});
     });
-  });
+  }, error: () => {
+    this.isRepositoriesLoading = false;
+    this.repositoriesError = 'No se pudieron cargar los repositorios.';
+  }});
 }
 
   deleteIdUserSave(){

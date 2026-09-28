@@ -1,40 +1,31 @@
-<div class="conteiner">
-  <form autocomplete="off" [formGroup]="employmentForm" class="form-container">
-
-    <H1>Registrar Employment</H1>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Title</mat-label>
-      <input matInput type="text" placeholder="Title" formControlName="title" required>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Position</mat-label>
-      <input matInput type="text" placeholder="Position" formControlName="position" required>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Description</mat-label>
-      <textarea matInput type="text" placeholder="Description" formControlName="description" required></textarea>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Vacancies</mat-label>
-      <input matInput type="number" placeholder="Vacancies" formControlName="vacancies" required>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Date Max of Postulation</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="dateMaxPostulation">
-      <mat-hint>MM/DD/YYYY</mat-hint>
-      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-
-    <button class="button" *ngIf="id==undefined ||false " (click)="addOrUpdate()"  color="primary">Register</button>
-    <button class="button" *ngIf="id!=undefined ||id!=null " (click)="addOrUpdate()"  color="primary">Update</button>
-    <button class="button" routerLink="/listEmployment" color="primary">View Employments</button>
-
+<section class="ww ww-page ww-form-page ww-co-surface">
+  <header class="ww-page-header"><h1 class="ww-page-title">{{ id ? 'Update Employment' : 'Register Employment' }}</h1></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando empleo...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <form autocomplete="off" [formGroup]="employmentForm" class="ww-form ww-form-co" (ngSubmit)="addOrUpdate()" *ngIf="!isLoading && !loadError">
+    <fieldset class="ww-lane">
+      <div class="ww-commit" [class.is-done]="employmentForm.get('title')?.valid && employmentForm.get('position')?.valid">
+        <h2 class="ww-commit-title">Employment</h2>
+        <div class="ww-row">
+          <label class="ww-field"><span class="ww-label">Title</span><input class="ww-input" type="text" placeholder="Title" formControlName="title" required></label>
+          <label class="ww-field"><span class="ww-label">Position</span><input class="ww-input" type="text" placeholder="Position" formControlName="position" required></label>
+        </div>
+      </div>
+      <div class="ww-commit" [class.is-done]="employmentForm.get('description')?.valid">
+        <h2 class="ww-commit-title">Description</h2>
+        <label class="ww-field"><span class="ww-label">Description</span><textarea class="ww-input" placeholder="Description" formControlName="description" required></textarea></label>
+      </div>
+      <div class="ww-commit" [class.is-done]="employmentForm.get('vacancies')?.valid && employmentForm.get('dateMaxPostulation')?.valid">
+        <h2 class="ww-commit-title">Postulation</h2>
+        <div class="ww-row">
+          <label class="ww-field"><span class="ww-label">Vacancies</span><input class="ww-input" type="number" placeholder="Vacancies" formControlName="vacancies" required></label>
+          <label class="ww-field"><span class="ww-label">Date Max of Postulation</span><input class="ww-input" type="date" formControlName="dateMaxPostulation" required><span class="ww-hint">MM/DD/YYYY</span></label>
+        </div>
+      </div>
+    </fieldset>
+    <div class="ww-form-actions">
+      <button class="ww-button ww-button-co" type="submit" *ngIf="!id">Register</button>
+      <button class="ww-button ww-button-co" type="submit" *ngIf="id">Update</button>
+      <a class="ww-button ww-button-outline" routerLink="/listEmployment" (click)="employmentService.deleteIdEmployment()">View Employments</a>
+    </div>
   </form>
-</div>
-
+</section>

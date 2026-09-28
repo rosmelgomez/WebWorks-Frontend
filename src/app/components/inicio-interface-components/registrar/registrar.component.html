@@ -1,152 +1,176 @@
-<div class="conteiner">
-  <mat-tab-group class="GroupForm" >
-    <mat-tab label="Usuario" class="label">
-    <form [formGroup]="registrarFormUser" autocomplete="off" >
-        <H1>Registrese</H1>
-        <p>Regístrate ahora y obtén un 30% de descuento</p>
+<main class="ww auth" [class.is-co]="role() === 'co'">
+  <section class="auth-intro" aria-labelledby="register-title">
+    <h1 id="register-title" class="auth-title">
+      <span class="quiet">Abre tu</span>
+      <span class="pressure">rama.</span>
+    </h1>
+    <p class="auth-lede">
+      @if (role() === 'dev') {
+        Crea tu perfil de developer, publica tus repositorios y postula con tu portafolio.
+      } @else {
+        Registra tu empresa, publica ofertas y revisa el trabajo real de quienes postulan.
+      }
+    </p>
+  </section>
 
-        <div class="conteniner_Datos">
-            <mat-form-field class="matIzquierdo">
-                <mat-label>Name</mat-label>
-                <input matInput type="text" placeholder="name" formControlName="name" required>
-            </mat-form-field>
+  <div class="register">
+    <div class="role-switch" role="group" aria-label="Tipo de cuenta">
+      <button type="button" class="role role-dev" aria-controls="register-form"
+              [attr.aria-pressed]="role() === 'dev'" (click)="setRole('dev')">Soy developer</button>
+      <button type="button" class="role role-co" aria-controls="register-form"
+              [attr.aria-pressed]="role() === 'co'" (click)="setRole('co')">Soy empresa</button>
+    </div>
 
-            <mat-form-field class="example-full-width">
-                <mat-label>LastName</mat-label>
-                <input matInput type="text" placeholder="lastname" formControlName="lastname" required>
-            </mat-form-field>
-        </div>
+    <form id="register-form" class="auth-form"
+          [attr.aria-label]="role() === 'dev' ? 'Registro de developer' : 'Registro de empresa'"
+          [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="ww-lane">
 
-        <div class="conteniner_Datos">
-            <mat-form-field class="matIzquierdo">
-                <mat-label>Phone</mat-label>
-                <input matInput type="text" placeholder="Phone number" formControlName="phone" required maxlength="9">
-            </mat-form-field>
-            <mat-form-field class="example-full-width">
-                <mat-label>Fecha Nacimiento</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="birthDate">
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+        @if (role() === 'dev') {
+          <fieldset class="ww-commit" [class.is-done]="done('name', 'lastname', 'birthDate', 'phone', 'email')">
+            <legend class="ww-commit-title">Tus datos</legend>
+            <div class="ww-row">
+              <div class="ww-field">
+                <label class="ww-label" for="dev-name">Nombre</label>
+                <input id="dev-name" class="ww-input" formControlName="name" autocomplete="given-name"
+                       [class.is-invalid]="invalid('name')" [attr.aria-invalid]="invalid('name')">
+                @if (invalid('name')) { <p class="ww-field-error">Escribe tu nombre.</p> }
+              </div>
+              <div class="ww-field">
+                <label class="ww-label" for="dev-lastname">Apellido</label>
+                <input id="dev-lastname" class="ww-input" formControlName="lastname" autocomplete="family-name"
+                       [class.is-invalid]="invalid('lastname')" [attr.aria-invalid]="invalid('lastname')">
+                @if (invalid('lastname')) { <p class="ww-field-error">Escribe tu apellido.</p> }
+              </div>
+            </div>
+            <div class="ww-row">
+              <div class="ww-field">
+                <label class="ww-label" for="dev-birth">Fecha de nacimiento</label>
+                <input id="dev-birth" class="ww-input" type="date" formControlName="birthDate" autocomplete="bday"
+                       [class.is-invalid]="invalid('birthDate')" [attr.aria-invalid]="invalid('birthDate')">
+                @if (invalid('birthDate')) { <p class="ww-field-error">Indica tu fecha de nacimiento.</p> }
+              </div>
+              <div class="ww-field">
+                <label class="ww-label" for="dev-phone">Celular</label>
+                <input id="dev-phone" class="ww-input" type="tel" inputmode="numeric" maxlength="9"
+                       formControlName="phone" autocomplete="tel-national"
+                       [class.is-invalid]="invalid('phone')" [attr.aria-invalid]="invalid('phone')">
+                @if (invalid('phone')) { <p class="ww-field-error">Escribe los 9 dígitos de tu celular.</p> }
+              </div>
+            </div>
+            <div class="ww-field">
+              <label class="ww-label" for="dev-email">Correo electrónico</label>
+              <input id="dev-email" class="ww-input" type="email" formControlName="email" autocomplete="email"
+                     [class.is-invalid]="invalid('email')" [attr.aria-invalid]="invalid('email')">
+              @if (invalid('email')) { <p class="ww-field-error">Escribe un correo válido, por ejemplo ana&#64;correo.com.</p> }
+            </div>
+          </fieldset>
+        } @else {
+          <fieldset class="ww-commit" [class.is-done]="done('ruc', 'socialReason', 'sector', 'legalRepresentative', 'description')">
+            <legend class="ww-commit-title">Tu empresa</legend>
+            <div class="ww-row">
+              <div class="ww-field">
+                <label class="ww-label" for="co-ruc">RUC</label>
+                <input id="co-ruc" class="ww-input" inputmode="numeric" maxlength="11" formControlName="ruc"
+                       [class.is-invalid]="invalid('ruc')" [attr.aria-invalid]="invalid('ruc')">
+                @if (invalid('ruc')) { <p class="ww-field-error">El RUC tiene 11 dígitos.</p> }
+              </div>
+              <div class="ww-field">
+                <label class="ww-label" for="co-reason">Razón social</label>
+                <input id="co-reason" class="ww-input" formControlName="socialReason" autocomplete="organization"
+                       [class.is-invalid]="invalid('socialReason')" [attr.aria-invalid]="invalid('socialReason')">
+                @if (invalid('socialReason')) { <p class="ww-field-error">Escribe la razón social.</p> }
+              </div>
+            </div>
+            <div class="ww-row">
+              <div class="ww-field">
+                <label class="ww-label" for="co-sector">Sector</label>
+                <input id="co-sector" class="ww-input" formControlName="sector" placeholder="Ej. Tecnología"
+                       [class.is-invalid]="invalid('sector')" [attr.aria-invalid]="invalid('sector')">
+                @if (invalid('sector')) { <p class="ww-field-error">Indica el sector.</p> }
+              </div>
+              <div class="ww-field">
+                <label class="ww-label" for="co-legal">Representante legal</label>
+                <input id="co-legal" class="ww-input" formControlName="legalRepresentative" autocomplete="name"
+                       [class.is-invalid]="invalid('legalRepresentative')" [attr.aria-invalid]="invalid('legalRepresentative')">
+                @if (invalid('legalRepresentative')) { <p class="ww-field-error">Escribe el nombre del representante.</p> }
+              </div>
+            </div>
+            <div class="ww-field">
+              <label class="ww-label" for="co-description">Descripción</label>
+              <textarea id="co-description" class="ww-input" formControlName="description" rows="3"
+                        placeholder="Qué hace tu empresa y qué perfiles buscan"
+                        [class.is-invalid]="invalid('description')" [attr.aria-invalid]="invalid('description')"></textarea>
+              @if (invalid('description')) { <p class="ww-field-error">Describe brevemente a tu empresa.</p> }
+            </div>
+          </fieldset>
+        }
 
-        </div>
-
-        <mat-form-field class="example-full-width">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" placeholder="email@" formControlName="email" required>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-            <mat-label>Username</mat-label>
-            <input matInput type="text" placeholder="username" formControlName="username" required>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width" style="color: black">
-        <mat-label>Password<</mat-label>
-        <input matInput [type]="hide() ? 'password' : 'text'" placeholder="password" formControlName="password" required/>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide()"
-        >
-          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-
-        <mat-form-field class="example-full-width" style="color: black">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" placeholder="confirmPassword" formControlName="confirmPassword" required/>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEventConfirmPassword($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hideConfirmPassword()"
-        >
-          <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <button class="button" (click)="registrarUser()" color="primary">Registrarse</button>
-
-    </form>
-    </mat-tab>
-
-    <mat-tab label="Empresa">
-      <form [formGroup]="registrarFormCompany" autocomplete="off" >
-
-        <H1>Registrese</H1>
-
-      <div class="conteniner_Datos">
-        <mat-form-field class="matIzquierdo">
-          <mat-label>RUC</mat-label>
-          <input matInput type="text" placeholder="ruc" formControlName="ruc" required maxlength="11">
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-          <mat-label>Social Reason</mat-label>
-          <input matInput type="text" placeholder="socialReason" formControlName="socialReason" required>
-        </mat-form-field>
+        <fieldset class="ww-commit" [class.is-done]="done('username', 'password', 'confirmPassword') && !form.hasError('mismatch')">
+          <legend class="ww-commit-title">Acceso</legend>
+          <div class="ww-field">
+            <label class="ww-label" for="reg-username">Nombre de usuario</label>
+            <input id="reg-username" class="ww-input" formControlName="username" autocomplete="username"
+                   autocapitalize="none" spellcheck="false"
+                   [class.is-invalid]="invalid('username')" [attr.aria-invalid]="invalid('username')">
+            @if (invalid('username')) { <p class="ww-field-error">Elige un nombre de usuario.</p> }
+          </div>
+          <div class="ww-row">
+            <div class="ww-field">
+              <label class="ww-label" for="reg-password">Contraseña</label>
+              <div class="ww-password">
+                <input id="reg-password" class="ww-input" [type]="hidePassword() ? 'password' : 'text'"
+                       formControlName="password" autocomplete="new-password" aria-describedby="reg-password-hint"
+                       [class.is-invalid]="invalid('password')" [attr.aria-invalid]="invalid('password')">
+                <button type="button" class="ww-reveal" (click)="hidePassword.set(!hidePassword())"
+                        [attr.aria-pressed]="!hidePassword()"
+                        [attr.aria-label]="hidePassword() ? 'Mostrar contraseña' : 'Ocultar contraseña'">
+                  <ng-container *ngTemplateOutlet="eye; context: { hidden: hidePassword() }" />
+                </button>
+              </div>
+              <p id="reg-password-hint" class="ww-hint">Mínimo 6 caracteres.</p>
+            </div>
+            <div class="ww-field">
+              <label class="ww-label" for="reg-confirm">Repite la contraseña</label>
+              <div class="ww-password">
+                <input id="reg-confirm" class="ww-input" [type]="hideConfirm() ? 'password' : 'text'"
+                       formControlName="confirmPassword" autocomplete="new-password"
+                       [class.is-invalid]="invalid('confirmPassword') || mismatch()"
+                       [attr.aria-invalid]="invalid('confirmPassword') || mismatch()">
+                <button type="button" class="ww-reveal" (click)="hideConfirm.set(!hideConfirm())"
+                        [attr.aria-pressed]="!hideConfirm()"
+                        [attr.aria-label]="hideConfirm() ? 'Mostrar contraseña' : 'Ocultar contraseña'">
+                  <ng-container *ngTemplateOutlet="eye; context: { hidden: hideConfirm() }" />
+                </button>
+              </div>
+              @if (mismatch()) { <p class="ww-field-error">No coincide con la contraseña.</p> }
+            </div>
+          </div>
+        </fieldset>
       </div>
 
-      <div class="conteniner_Datos">
-        <mat-form-field class="matIzquierdo">
-          <mat-label>Sector</mat-label>
-          <input matInput type="text" placeholder="sector" formControlName="sector" required >
-        </mat-form-field>
-        <mat-form-field class="example-full-width">
-          <mat-label>Legal Representative</mat-label>
-          <input matInput type="text" placeholder="legalRepresentative" formControlName="legalRepresentative" required>
-        </mat-form-field>
+      <div class="auth-actions" aria-live="polite">
+        @if (errorMessage()) {
+          <p class="ww-alert" role="alert">{{ errorMessage() }}</p>
+        }
+        <button class="ww-button submit" type="submit" [disabled]="submitting()">
+          @if (submitting()) {
+            Creando cuenta…
+          } @else {
+            {{ role() === 'dev' ? 'Crear cuenta de developer' : 'Registrar mi empresa' }}
+          }
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+        </button>
+        <p class="auth-switch">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
       </div>
-
-
-        <mat-form-field class="example-full-width">
-          <mat-label>Description</mat-label>
-          <textarea matInput type="text" placeholder="description" formControlName="description" required></textarea>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-        <mat-label>Username</mat-label>
-        <input matInput type="text" placeholder="username" formControlName="username" required>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width" style="color: black">
-          <mat-label>Password</mat-label>
-          <input matInput [type]="hideCompany() ? 'password' : 'text'" placeholder="password" formControlName="password" required/>
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="clickEventCompany($event)"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hideCompany()"
-          >
-            <mat-icon>{{hideCompany() ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width" style="color: black">
-          <mat-label>Confirm Password</mat-label>
-          <input matInput [type]="hideConfirmPasswordCompany() ? 'password' : 'text'" placeholder="confirmPassword" formControlName="confirmPassword" required/>
-          <button
-            mat-icon-button
-            matSuffix
-            (click)="clickEventConfirmPasswordCompany($event)"
-            [attr.aria-label]="'Hide password'"
-            [attr.aria-pressed]="hideConfirmPasswordCompany()"
-          >
-            <mat-icon>{{hideConfirmPasswordCompany() ? 'visibility_off' : 'visibility'}}</mat-icon>
-          </button>
-        </mat-form-field>
-
-      <button class="button" (click)="registrarCompany()" color="primary">Registrarse</button>
-
     </form>
+  </div>
+</main>
 
-    </mat-tab>
-
-  </mat-tab-group>
-</div>
+<ng-template #eye let-hidden="hidden">
+  @if (hidden) {
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" /><circle cx="12" cy="12" r="3" /></svg>
+  } @else {
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10.8 10.8 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.1M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7c1.8 0 3.4-.5 4.8-1.3M9.9 9.9a3 3 0 0 0 4.2 4.2" /></svg>
+  }
+</ng-template>

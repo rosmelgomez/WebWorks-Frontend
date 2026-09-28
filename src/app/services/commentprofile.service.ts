@@ -1,38 +1,22 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthService} from "./auth.service";
+import {HttpClient} from "@angular/common/http";
 import {CommentProfile} from "../model/commentProfile";
 import {CommentProfileSummary} from "../modelComplement/commentProfileSummary";
 import {Url} from "../model/url";
 
-
-const base_url = Url.urlBackend + '/webworks/commentProfile';
+const base_url = Url.urlBackend + '/commentProfile';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentProfileService {
-  constructor(private http: HttpClient,private authService: AuthService) {}
+  constructor(private http: HttpClient) {}
 
-addComment(comment:CommentProfile) {
-    const url = base_url + '/user/addComment';
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.post<number>(endpoint,comment,{headers});
+  addComment(comment: CommentProfile) {
+    return this.http.post<number>(base_url + '/addComment', comment, { withCredentials: true });
+  }
+
+  getComment(idUser: number) {
+    return this.http.get<CommentProfileSummary[]>(base_url + `/getCommentProfileByUser/${idUser}`, { withCredentials: true });
+  }
 }
-
-getComment(idUser:number) {
-    const url = base_url + `/user/getCommentProfileByUser/${idUser}`;
-    const token = this.authService.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    })
-  const endpoint = `${url}`;
-return this.http.get<CommentProfileSummary[]>(endpoint,{headers});
-}
-
-}
-

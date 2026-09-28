@@ -1,48 +1,26 @@
-<mat-toolbar class="container">
-  <div class="contenidoInicio" [routerLink]="'/pageUser'">
-    <span>W</span>
-    <span>E</span>
-    <span>B</span>
-    <span>W</span>
-    <span>O</span>
-    <span>R</span>
-    <span>K</span>
-    <span>S</span>
-  </div>
-  <div class="containerButton" >
+<aside class="ww rail">
+  <a class="brand" routerLink="/pageUser" aria-label="WebWorks, inicio del developer">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <path class="lane-dev" d="M8 3 V14 C8 21 16 21 16 27" />
+      <path class="lane-co" d="M24 3 V14 C24 21 16 21 16 27" />
+      <circle class="node" cx="16" cy="27" r="4" />
+    </svg>
+    <span class="brand-name">WebWorks</span>
+  </a>
 
-    <div class="iconContainer" [routerLink]="'/pageUser'">
-      <mat-icon class="icono" svgIcon="inicioIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-      </mat-icon>
-      <span class="textoNombre">Inicio</span>
-    </div>
+  <nav class="lane" aria-label="Área del developer">
+    <ul>
+      @for (item of items; track item.route) {
+        <li>
+          <a class="stop" [routerLink]="item.route" routerLinkActive="is-active"
+             ariaCurrentWhenActive="page">{{ item.label }}</a>
+        </li>
+      }
+    </ul>
+  </nav>
 
-    <div class="iconContainer" [routerLink]="'/subscription'">
-      <mat-icon class="icono" svgIcon="carritoIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-      </mat-icon>
-      <span class="textoNombre">Carrito</span>
-    </div>
-
-    <div class="iconContainer" [routerLink]="'/listMethodPayment'">
-      <mat-icon class="icono" svgIcon="cardIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-      </mat-icon>
-      <span class="textoNombre">Tarjetas</span>
-    </div>
-
-    <div class="iconContainer" [routerLink]="'/profileUser'">
-      <mat-icon class="icono" svgIcon="userIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-      </mat-icon>
-      <span class="textoNombre">Perfil</span>
-    </div>
-
-
-    <div class="iconContainer" (click)="logoutUser()">
-      <mat-icon class="icono" svgIcon="salirIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-      </mat-icon>
-      <span class="textoNombre">Logout</span>
-    </div>
-
-  </div>
-
-
-</mat-toolbar>
+  <button type="button" class="logout" (click)="logoutUser()">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 4 H4 V16 H8 M12 6 L16 10 L12 14 M16 10 H8" /></svg>
+    Salir
+  </button>
+</aside>

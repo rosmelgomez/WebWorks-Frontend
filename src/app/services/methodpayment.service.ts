@@ -1,48 +1,29 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { MethodPayment } from '../model/methodPayment';
 import {Url} from "../model/url";
 
-const base_url = Url.urlBackend + '/webworks/methodpayment';
+const base_url = Url.urlBackend + '/methodpayment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class MethodpaymentService {
+  constructor(private http: HttpClient) { }
 
-  constructor(private http: HttpClient, private Auth: AuthService) { }
-
-  methodsPaymentByUser(id: number){
-    const url= base_url + `/user/methodsPaymentByUser/${id}`;
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<MethodPayment[]>(endpoint,{ headers });
+  methodsPaymentByUser(id: number) {
+    return this.http.get<MethodPayment[]>(base_url + `/methodsPaymentByUser/${id}`, { withCredentials: true });
   }
 
-  addMethodPayment(methodPayment:MethodPayment) {
-    const url = base_url + '/user/addMethodPayment';
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.post<Boolean>(endpoint,methodPayment,{headers});
+  addMethodPayment(methodPayment: MethodPayment) {
+    return this.http.post<Boolean>(base_url + '/addMethodPayment', methodPayment, { withCredentials: true });
   }
 
   getMethodPaymentById(id: number) {
-    const url = base_url + `/user/methodPaymentById/${id}`;
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<MethodPayment>(endpoint,{ headers});
+    return this.http.get<MethodPayment>(base_url + `/methodPaymentById/${id}`, { withCredentials: true });
   }
 
-  saveId( id:number){
+  saveId(id: number) {
     localStorage.setItem('idCard', id.toString());
   }
 
@@ -55,25 +36,10 @@ export class MethodpaymentService {
   }
 
   delete(id: number) {
-    const url = base_url + `/user/deleteMethodPaymentById/${id}`;
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.delete<Boolean>(endpoint,{ headers});
+    return this.http.delete<Boolean>(base_url + `/deleteMethodPaymentById/${id}`, { withCredentials: true });
   }
 
-  update(methodPayment:MethodPayment){
-    const url = base_url + '/user/updateMethodPayment';
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.put<boolean>(endpoint, methodPayment,{headers });
+  update(methodPayment: MethodPayment) {
+    return this.http.put<boolean>(base_url + '/updateMethodPayment', methodPayment, { withCredentials: true });
   }
-
-
 }
-

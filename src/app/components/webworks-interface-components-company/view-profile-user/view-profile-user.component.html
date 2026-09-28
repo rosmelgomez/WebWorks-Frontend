@@ -1,52 +1,7 @@
-<div class="container">
-  <div class="card-container"  *ngFor="let item of dataSourceUser.data">
-    <mat-card appearance="outlined" class="card">
-      <div class="information">
-        <h1>Profile User</h1>
-        <p> Name: {{item.name}}</p>
-        <p> LastName: {{item.lastname}}</p>
-        <p> Birth Date: {{item.birthDate | date:'dd/MM/yyyy'}}</p>
-        <p> Phone: {{item.phone}}</p>
-        <p> Email: {{item.email}}</p>
-      </div>
-      <div  *ngIf="item.photo">
-        <img [ngSrc]="item.photo.toString()"  alt="" width="200" height="200">
-      </div>
-    </mat-card>
-  </div>
-
-  <div class="containerRepository"  >
-    <h1 style="text-align: center">Repositories</h1>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree" >
-      <mat-nested-tree-node *matTreeNodeDef="let node">
-        {{node.name}}
-      </mat-nested-tree-node>
-      <!-- This is the tree node template for expandable nodes -->
-      <mat-nested-tree-node
-        *matTreeNodeDef="let node; when: hasChild"
-        matTreeNodeToggle >
-        <div class="mat-tree-node">
-          <button mat-icon-button matTreeNodeToggle
-                  [attr.aria-label]="'Toggle ' + node.name">
-            <mat-icon class="mat-icon-rtl-mirror">
-              {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-            </mat-icon>
-          </button>
-          {{node.name}}
-        </div>
-        <!-- There is inline padding applied to this div using styles.
-            This padding value depends on the mat-icon-button width.  -->
-        <div [class.example-tree-invisible]="!treeControl.isExpanded(node)"
-             role="group">
-          <ng-container matTreeNodeOutlet></ng-container>
-        </div>
-      </mat-nested-tree-node>
-    </mat-tree>
-
-
-  </div>
-
-  <div class="buttons">
-    <button class="btnReturn" routerLink="/listJobApplication" (click)="deleteIdUserSave()"> Return to Job Application</button>
-  </div>
-</div>
+<section class="ww ww-page ww-co-surface"><header class="ww-page-header"><h1 class="ww-page-title">Profile User</h1><a class="ww-button ww-button-outline" routerLink="/listJobApplication" (click)="deleteIdUserSave()">Return to Job Application</a></header>
+  <p class="ww-state" role="status" *ngIf="isUserLoading">Cargando perfil...</p><p class="ww-state" role="alert" *ngIf="userError">{{userError}}</p><p class="ww-state" *ngIf="!isUserLoading && !userError && dataSourceUser.data.length === 0">No hay información de perfil.</p>
+  <article class="ww-profile" *ngFor="let item of dataSourceUser.data"><dl class="ww-details"><div><dt>Name:</dt><dd>{{item.name}}</dd></div><div><dt>LastName:</dt><dd>{{item.lastname}}</dd></div><div><dt>Birth Date:</dt><dd>{{item.birthDate | date:'dd/MM/yyyy'}}</dd></div><div><dt>Phone:</dt><dd>{{item.phone}}</dd></div><div><dt>Email:</dt><dd>{{item.email}}</dd></div></dl><img *ngIf="item.photo" [ngSrc]="item.photo.toString()" alt="" width="200" height="200"></article>
+  <section class="ww-section"><h2 class="ww-section-title">Repositories</h2><p class="ww-state" role="status" *ngIf="isRepositoriesLoading">Cargando repositorios...</p><p class="ww-state" role="alert" *ngIf="repositoriesError">{{repositoriesError}}</p><p class="ww-state" *ngIf="!isRepositoriesLoading && !repositoriesError && dataSource.data.length === 0">No hay repositorios publicados.</p>
+    <div class="repository-tree" *ngIf="!isRepositoriesLoading && !repositoriesError && dataSource.data.length > 0"><details *ngFor="let repository of dataSource.data"><summary>{{repository.name}}</summary><p class="ww-state" role="alert" *ngIf="repositoryErrors[repository.name]">{{repositoryErrors[repository.name]}}</p><details class="project" *ngFor="let project of repository.children"><summary>{{project.name}}</summary><p *ngFor="let detail of project.children">{{detail.name}}</p></details><p class="ww-state" *ngIf="!repositoryErrors[repository.name] && !repository.children?.length">No hay proyectos en este repositorio.</p></details></div>
+  </section>
+</section>

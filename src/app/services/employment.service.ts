@@ -1,89 +1,50 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthService} from "./auth.service";
+import {HttpClient} from "@angular/common/http";
 import {Employment} from "../model/employment";
 import {Url} from "../model/url";
 import {EmploymentSummary} from "../modelComplement/employmentSummary";
 
-const base_url = Url.urlBackend + '/webworks/employment';
+const base_url = Url.urlBackend + '/employment';
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class EmploymentService {
-  constructor(private http: HttpClient,private Auth:AuthService) { }
+  constructor(private http: HttpClient) { }
 
-  addEmployment(employment:Employment){
-    const url=base_url+'/company/addEmployment'
-    const token=this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-   return this.http.post<boolean>(endpoint,employment,{headers});
+  addEmployment(employment: Employment) {
+    return this.http.post<boolean>(base_url + '/addEmployment', employment, { withCredentials: true });
   }
 
-  getEmploymentsByCompany(id:number){
-    const url=base_url+`/company/getEmploymentsByCompany/${id}`
-    const token=this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<Employment[]>(endpoint,{headers});
+  getEmploymentsByCompany(id: number) {
+    return this.http.get<Employment[]>(base_url + `/getEmploymentsByCompany/${id}`, { withCredentials: true });
   }
 
-  getEmploymentById(id:number){
-    const url=base_url+`/company/getEmploymentById/${id}`
-    const token=this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<Employment>(endpoint,{headers});
+  getEmploymentById(id: number) {
+    return this.http.get<Employment>(base_url + `/getEmploymentById/${id}`, { withCredentials: true });
   }
 
-  updateEmployment(employment:Employment){
-    const url=base_url+`/company/updateEmployment`
-    const token=this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.put<boolean>(url,employment,{headers});
+  updateEmployment(employment: Employment) {
+    return this.http.put<boolean>(base_url + '/updateEmployment', employment, { withCredentials: true });
   }
 
-  deleteEmployment(id:number){
-    const url=base_url+`/company/deleteEmployment/${id}`
-    const token=this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.delete<boolean>(url,{headers});
+  deleteEmployment(id: number) {
+    return this.http.delete<boolean>(base_url + `/deleteEmployment/${id}`, { withCredentials: true });
   }
 
-  saveIdEmployment(id:number){
+  saveIdEmployment(id: number) {
     localStorage.setItem('idEmployment', id.toString());
   }
 
-  getIdEmployment():string{
+  getIdEmployment(): string {
     return localStorage.getItem('idEmployment')!;
   }
 
-  deleteIdEmployment(){
+  deleteIdEmployment() {
     localStorage.removeItem('idEmployment');
   }
 
-  //employment-User
-  getEmployments(){
-    const url=base_url+`/user/getEmploymentsSummary`
-    const token=this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<EmploymentSummary[]>(endpoint,{headers});
+  getEmployments() {
+    return this.http.get<EmploymentSummary[]>(base_url + '/getEmploymentsSummary', { withCredentials: true });
   }
-
-
 }

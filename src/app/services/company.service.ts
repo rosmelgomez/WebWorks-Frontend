@@ -1,52 +1,37 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthService} from "./auth.service";
+import {HttpClient} from "@angular/common/http";
 import {Company} from "../model/company";
 import {tap} from "rxjs/operators";
 import {Url} from "../model/url";
 
-const base_url = Url.urlBackend + '/webworks';
+const base_url = Url.urlBackend + '/company';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CompanyService {
-  constructor(private http: HttpClient, private Auth: AuthService) { }
+  constructor(private http: HttpClient) { }
 
-  getCompany(username:string){
-    const url=base_url+`/corporation/company/companyByUsername/${username}`
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<Company>(endpoint,{headers}).pipe(
+  getCompany(username: string) {
+    return this.http.get<Company>(base_url + `/companyByUsername/${username}`, { withCredentials: true }).pipe(
       tap(response => {
-        // Almacenar el token JWT en el almacenamiento local o de sesión
         localStorage.setItem('idCompany', response.id.toString());
       }));
   }
 
-  AddCompany(company:Company){
-    const url=base_url+`/registerCompany`
-    const endpoint = `${url}`;
-   return  this.http.post<Company>(endpoint,company)
+  AddCompany(company: Company) {
+    return this.http.post<Company>(Url.urlBackend + '/registerCompany', company, { withCredentials: true });
   }
 
-  updateCompany(company:Company){
-    const url=base_url+`/corporation/company/updateCompany`
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.put<boolean>(url,company,{headers});
+  updateCompany(company: Company) {
+    return this.http.put<boolean>(base_url + '/updateCompany', company, { withCredentials: true });
   }
 
-  getIdCompany():string{
+  getIdCompany(): string {
     return localStorage.getItem('idCompany')!;
   }
 
-  deleteIdCompany(){
+  deleteIdCompany() {
     localStorage.removeItem('idCompany');
   }
 }

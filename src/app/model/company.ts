@@ -7,5 +7,6 @@ export interface Company{
   description:String,
   username:String,
   password:String,
+  currentPassword?:String,
   rol:String
 }

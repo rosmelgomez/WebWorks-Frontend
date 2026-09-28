@@ -1,27 +1,47 @@
-<div class="conteiner">
-    <form autocomplete="off" [formGroup]="repositorioForm" class="form-container">
-        <h1>Registrar Repositorio</h1>
+<section class="ww ww-page ww-form-page">
+  <header class="ww-page-header">
+    <h1 class="ww-page-title">{{ isEditMode ? 'Modificar Repositorio' : 'Registrar Repositorio' }}</h1>
+  </header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando...</p>
+  <p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
 
-        <mat-form-field class="example-full-width">
-            <mat-label>Nombre del proyecto</mat-label>
-            <input matInput type="text" placeholder="Nombre del repositorio" formControlName="name" required>
-        </mat-form-field>
+  <div *ngIf="!isLoading && !loadError && !isEditMode && !hasActiveSubscription" class="ww-section">
+    <h2 class="ww-section-title">Suscripción Requerida</h2>
+    <p class="ww-state">No cuentas con una suscripción activa. Debes suscribirte a un plan antes de poder registrar repositorios en tu portafolio.</p>
+    <div class="ww-form-actions">
+      <a class="ww-button ww-button-dev" routerLink="/listPlanUser">Ver Planes Disponibles</a>
+      <a class="ww-button ww-button-outline" routerLink="/pageUser">Volver a Mi Espacio</a>
+    </div>
+  </div>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>Descripcion</mat-label>
-        <textarea matInput type="text" placeholder="Descripción" formControlName="description" required></textarea>
-      </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-            <mat-label>Cantidad de Proyectos</mat-label>
-            <input matInput type="number" placeholder="Número de proyectos" formControlName="numberProject" required>
-        </mat-form-field>
-
-        <button class="button" *ngIf="id==undefined || false " (click)="addOrUpdate()" color="primary">Registrar</button>
-        <button class="button" *ngIf="id!=undefined || id!=null " (click)="addOrUpdate()" color="primary">Modificar</button>
-
-        <button class="button"  [routerLink]="'/listRepositorio'" (click)="deleteDateSave()" color="primary">Ver Repositorios</button>
-
-    </form>
-</div>
-
+  <form autocomplete="off" [formGroup]="repositorioForm" class="ww-form" (ngSubmit)="addOrUpdate()" *ngIf="!isLoading && !loadError && (isEditMode || hasActiveSubscription)">
+    <fieldset class="ww-lane">
+      <div class="ww-commit" [class.is-done]="repositorioForm.get('name')?.valid">
+        <h2 class="ww-commit-title">Nombre del Repositorio</h2>
+        <label class="ww-field">
+          <span class="ww-label">Nombre del repositorio</span>
+          <input class="ww-input" type="text" placeholder="Nombre del repositorio" formControlName="name" required>
+        </label>
+      </div>
+      <div class="ww-commit" [class.is-done]="repositorioForm.get('description')?.valid">
+        <h2 class="ww-commit-title">Descripción</h2>
+        <label class="ww-field">
+          <span class="ww-label">Descripción</span>
+          <textarea class="ww-input" placeholder="Descripción" formControlName="description" required></textarea>
+        </label>
+      </div>
+      <div class="ww-commit" [class.is-done]="repositorioForm.get('numberProject')?.valid">
+        <h2 class="ww-commit-title">Cantidad de Proyectos</h2>
+        <label class="ww-field">
+          <span class="ww-label">Cantidad de Proyectos (Máximo: {{ maxProjectsAllowed }})</span>
+          <input class="ww-input" type="number" min="1" [max]="maxProjectsAllowed" placeholder="Número de proyectos" formControlName="numberProject" required>
+        </label>
+      </div>
+    </fieldset>
+    <div class="ww-form-actions">
+      <button class="ww-button ww-button-dev" type="submit" *ngIf="!isEditMode">Registrar</button>
+      <button class="ww-button ww-button-dev" type="submit" *ngIf="isEditMode">Modificar</button>
+      <a class="ww-button ww-button-outline" routerLink="/listRepositorio" (click)="deleteDateSave()">Ver Repositorios</a>
+    </div>
+  </form>
+</section>

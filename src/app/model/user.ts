@@ -9,6 +9,7 @@ export interface User {
     email:EmailValidator,
     username:String,
     password:String,
+    currentPassword?:String,
     photo:String,
     rol:String
 }

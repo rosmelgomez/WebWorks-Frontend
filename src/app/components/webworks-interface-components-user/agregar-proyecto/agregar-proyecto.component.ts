@@ -1,37 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../../services/project.service';
 import { Project } from '../../../model/project';
 import { CommonModule } from '@angular/common';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import {RepositoryService} from "../../../services/repository.service";
+import { RepositoryService } from '../../../services/repository.service';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-agregar-proyecto',
   standalone: true,
   imports: [
     CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
     RouterModule,
-    MatIconModule,
-    MatInputModule,
     ReactiveFormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-],
+  ],
   templateUrl: './agregar-proyecto.component.html',
   styleUrl: './agregar-proyecto.component.css'
 })
 export class AgregarProyectoComponent implements OnInit {
 
-  public projectForm!: FormGroup
-  public id: number | undefined |null
+  public projectForm!: FormGroup;
+  public id: number | null = null;
+  isEditMode = false;
+  isLoading = false;
+  loadError = '';
+
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
@@ -41,67 +35,86 @@ export class AgregarProyectoComponent implements OnInit {
 
   ngOnInit(): void {
     console.clear();
-    this.reactiveForm()
+    this.reactiveForm();
   }
+
   reactiveForm(): void {
     this.projectForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
       language: ['', Validators.required]
-    })
+    });
 
-    if (this.projectService.getIdUpdate() != null) {
-      this.id = parseInt(this.projectService.getIdUpdate()!);
-      this.projectService.projectById(parseInt(this.projectService.getIdUpdate()!)).subscribe((data: Project) => {
-        this.projectForm.get('name')!.setValue(data.name);
-        this.projectForm.get('description')!.setValue(data.description);
-        this.projectForm.get('language')!.setValue(data.language);
-      })
+    const idUpdate = this.projectService.getIdUpdate();
+    if (idUpdate != null) {
+      this.isEditMode = true;
+      this.id = parseInt(idUpdate);
+      this.isLoading = true;
+      this.projectService.projectById(this.id).subscribe({
+        next: (data: Project) => {
+          this.projectForm.get('name')!.setValue(data.name);
+          this.projectForm.get('description')!.setValue(data.description);
+          this.projectForm.get('language')!.setValue(data.language);
+          this.isLoading = false;
+        },
+        error: () => {
+          this.isLoading = false;
+          this.loadError = 'No se pudo cargar el proyecto.';
+        }
+      });
+    } else {
+      this.isEditMode = false;
+      this.id = null;
     }
-
   }
 
   addOrUpdate() {
     if (this.projectForm.valid) {
+      const repoId = this.repositoryService.getIdSave();
+      if (!repoId) {
+        alert('No se encontró el repositorio seleccionado.');
+        this.router.navigateByUrl('/listRepositorio');
+        return;
+      }
+
       const project: Project = {
-        id: 0,
+        id: this.id || 0,
         name: this.projectForm.get('name')!.value,
-        dateCreate: new Date(), // Fecha de inicio actual como objeto Date
+        dateCreate: new Date(),
         description: this.projectForm.get('description')!.value,
-        language:this.projectForm.get('language')!.value,
-        id_repository: parseInt(this.repositoryService.getIdSave()!),
+        language: this.projectForm.get('language')!.value,
+        id_repository: parseInt(repoId),
       };
-      if (this.projectService.getIdUpdate() == null) {
-            this.projectService.addProject(project).subscribe({
-              next: (data) => {
-                if (data) {
-                  console.log("proyecto creado")
-                  this.projectForm.reset()
-                  this.router.navigateByUrl("/listProyecto").then( ()=> console.log("redirected"));
-                }else{
-                  alert('error al crear el proyecto')
-                }
-              }
-        })
-      } else {
-        project.id = this.id!;
-        console.log(project.id)
-        this.projectService.update(project).subscribe({
-          next: (_data) => {
-            console.log('proyecto modificado')
-            this.projectForm.reset()
-            this.router.navigate(["/listProyecto"]).then()
+
+      if (!this.isEditMode) {
+        this.projectService.addProject(project).subscribe({
+          next: (data) => {
+            if (data) {
+              this.projectForm.reset();
+              this.router.navigateByUrl("/listProyecto");
+            } else {
+              alert('Error al crear el proyecto.');
+            }
           },
           error: (err: any) => {
-            console.log(err)
+            alert(err?.error?.message || 'Error al crear el proyecto.');
           }
-        })
+        });
+      } else {
+        project.id = this.id!;
+        this.projectService.update(project).subscribe({
+          next: (_data) => {
+            this.projectForm.reset();
+            this.projectService.deleteIdSave();
+            this.router.navigate(["/listProyecto"]);
+          },
+          error: (err: any) => {
+            alert(err?.error?.message || 'Error al modificar el proyecto.');
+          }
+        });
       }
     } else {
-      console.error('completo todos los datos requeridos ');
-
+      alert('Por favor completa todos los datos requeridos.');
     }
   }
-
-
 }

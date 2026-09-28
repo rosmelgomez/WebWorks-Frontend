@@ -1,71 +1,173 @@
-<div class="container">
-    <div class="group">
-        <mat-icon class="icon" svgIcon="busquedaIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-        </mat-icon>
-        <input class="input" type="search" placeholder="Buscar Informacion">
+<main class="dash">
+  <header class="dash-head">
+    @switch (userState()) {
+      @case ('loading') {
+        <h1 class="dash-title" aria-busy="true">Cargando tu espacio…</h1>
+      }
+      @case ('error') {
+        <h1 class="dash-title">No pudimos cargar tu perfil.</h1>
+        <button type="button" class="ww-button" (click)="retryUser()">Reintentar</button>
+      }
+      @default {
+        <h1 class="dash-title">Hola, {{ user()?.name }}.</h1>
+        <p class="dash-plan">
+          @if (planState() === 'ready') {
+            <span class="plan-name">{{ planName() }}</span>
+          }
+          <a routerLink="/listSubscription">Mis suscripciones</a>
+          <a routerLink="/listPlanUser">Ver planes</a>
+        </p>
+      }
+    }
+  </header>
+
+  <div class="dash-grid">
+    <div class="dash-main">
+      <section class="block" aria-labelledby="portfolio-title">
+        <div class="block-head">
+          <h2 id="portfolio-title" class="block-title">Tu portafolio</h2>
+          @if (hasActiveSubscription()) {
+            <a class="ww-button new-repo" routerLink="/agregarRepositorio">
+              Nuevo repositorio
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4 V16 M4 10 H16" /></svg>
+            </a>
+          } @else if (planState() === 'ready') {
+            <a class="ww-button ww-button-dev" routerLink="/listPlanUser" title="Suscríbete a un plan para registrar repositorios">
+              Activar plan para crear repositorios
+            </a>
+          }
+        </div>
+
+        @if (usageReady() && hasActiveSubscription()) {
+          <div class="usage">
+            <div class="meter">
+              <p class="meter-figure"><strong>{{ repositories().length }}</strong> de {{ repoLimit() }}</p>
+              <p class="meter-label">repositorios</p>
+              <ng-container *ngTemplateOutlet="gauge; context: { used: repositories().length, limit: repoLimit() }" />
+            </div>
+            <div class="meter">
+              <p class="meter-figure"><strong>{{ projectCount() }}</strong> de {{ projectLimit() }}</p>
+              <p class="meter-label">proyectos</p>
+              <ng-container *ngTemplateOutlet="gauge; context: { used: projectCount(), limit: projectLimit() }" />
+            </div>
+          </div>
+        } @else if (usageReady() && !hasActiveSubscription()) {
+          <p class="state">Para registrar repositorios y proyectos, necesitas una suscripción activa. <a routerLink="/listPlanUser">Ver planes</a>.</p>
+        } @else if (planState() === 'error' || repoState() === 'error') {
+          <p class="state" role="alert">No pudimos cargar el uso de tu plan. Recarga la página para intentarlo de nuevo.</p>
+        } @else {
+          <p class="state" role="status">Cargando el uso de tu plan…</p>
+        }
+      </section>
+
+      <section class="block" aria-labelledby="repos-title">
+        <div class="block-head">
+          <h2 id="repos-title" class="block-title">Repositorios</h2>
+          <a class="more" routerLink="/listRepositorio">Ver todos</a>
+        </div>
+
+        @switch (repoState()) {
+          @case ('loading') { <p class="state" role="status">Cargando repositorios…</p> }
+          @case ('error') { <p class="state" role="alert">No pudimos cargar tus repositorios. Recarga la página para intentarlo de nuevo.</p> }
+          @default {
+            @if (repositories().length === 0) {
+              <div class="empty">
+                @if (hasActiveSubscription()) {
+                  <p>Todavía no tienes repositorios. Crea el primero y agrupa ahí tus proyectos.</p>
+                  <a class="ww-button new-repo" routerLink="/agregarRepositorio">Crear repositorio</a>
+                } @else {
+                  <p>Para crear repositorios y agrupar tus proyectos, primero debes estar suscrito a un plan.</p>
+                  <a class="ww-button ww-button-dev" routerLink="/listPlanUser">Elegir un plan</a>
+                }
+              </div>
+            } @else {
+              <ul class="log">
+                @for (repo of repositories(); track repo.id) {
+                  <li>
+                    <button type="button" class="log-row" (click)="openRepository(repo)">
+                      <span class="log-name">{{ repo.name }}</span>
+                      <span class="log-desc">{{ repo.description }}</span>
+                      <span class="log-meta">
+                        {{ repo.numberProject }} {{ repo.numberProject === 1 ? 'proyecto' : 'proyectos' }}
+                        · creado el {{ repo.dateCreate | date: 'd MMM y' : '' : 'es' }}
+                      </span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          }
+        }
+      </section>
     </div>
 
-    <div *ngFor="let item of dataSource.data">
-     <div class="contenido">
-       <h1>Bienvenido</h1>
-       <h2>{{item.name}} {{item.lastname}}</h2>
-     </div>
-   </div>
+    <aside class="dash-side">
+      <section class="block" aria-labelledby="jobs-title">
+        <div class="block-head">
+          <h2 id="jobs-title" class="block-title">Ofertas abiertas</h2>
+        </div>
+        @switch (jobState()) {
+          @case ('loading') { <p class="state" role="status">Cargando ofertas…</p> }
+          @case ('error') { <p class="state" role="alert">No pudimos cargar las ofertas.</p> }
+          @default {
+            @if (employments().length === 0) {
+              <p class="state">No hay ofertas abiertas por ahora.</p>
+            } @else {
+              <ul class="jobs">
+                @for (job of employments(); track job.id) {
+                  <li class="job">
+                    <p class="job-title">{{ job.title }}</p>
+                    <p class="job-company">{{ job.companyName }}</p>
+                    <p class="job-meta">
+                      {{ job.vacancies }} {{ job.vacancies === 1 ? 'vacante' : 'vacantes' }}
+                      · postula hasta el {{ job.dateMaxPostulation | date: 'd MMM' : '' : 'es' }}
+                    </p>
+                  </li>
+                }
+              </ul>
+            }
+          }
+        }
+        <a class="more block-link" routerLink="/listEmploymentUser">Ver todas las ofertas</a>
+      </section>
 
-    <div class="cardContainer" >
-
-      <div class="cardGroup">
-      <mat-card appearance="outlined" class="card">
-        <mat-card-header>
-          <mat-card-title >Repositorios</mat-card-title>
-          <mat-card-subtitle>Agrega y visualiza tus repositorios</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions align="end">
-          <button mat-button routerLink="/listRepositorio">Repositorios</button>
-        </mat-card-actions>
-      </mat-card>
-      </div>
-
-      <div class="cardGroup">
-        <mat-card appearance="outlined" class="card">
-          <mat-card-header>
-            <mat-card-title>Comentarios</mat-card-title>
-            <mat-card-subtitle>Mira los comentarios a los desarrolladores</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-actions align="end">
-            <button mat-button routerLink="/comment" >Comentarios</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-
-      <div class="cardGroup" *ngIf="checkSubscription()">
-        <mat-card appearance="outlined" class="card">
-          <mat-card-header>
-            <mat-card-title>Employments</mat-card-title>
-            <mat-card-subtitle>Encuentra tu trabajo deseado</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-actions align="end">
-            <button mat-button routerLink="/listEmploymentUser" >Employments</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-
-      <div class="cardGroup">
-        <mat-card appearance="outlined" class="card">
-          <mat-card-header>
-            <mat-card-title>Subscripciones</mat-card-title>
-            <mat-card-subtitle>mira tus subscripciones</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-actions align="end">
-            <button mat-button routerLink="/listSubscription">Subscripciones</button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-
-    </div>
-
-  <div>
-    <p>Usted no es subscrito tiene 3 repositorios que puede agregar</p>
+      <section class="block" aria-labelledby="comments-title">
+        <div class="block-head">
+          <h2 id="comments-title" class="block-title">Comentarios recibidos</h2>
+        </div>
+        @switch (commentState()) {
+          @case ('loading') { <p class="state" role="status">Cargando comentarios…</p> }
+          @case ('error') { <p class="state" role="alert">No pudimos cargar tus comentarios.</p> }
+          @default {
+            @if (comments().length === 0) {
+              <p class="state">Aún nadie comentó tu perfil.</p>
+            } @else {
+              <ul class="comments">
+                @for (comment of comments(); track comment.id) {
+                  <li class="comment">
+                    <p class="comment-text">{{ comment.comment }}</p>
+                    <p class="comment-meta">{{ comment.commentAuthor }} · {{ comment.score }} de 5</p>
+                  </li>
+                }
+              </ul>
+            }
+          }
+        }
+        <a class="more block-link" routerLink="/comment">Comentar otros perfiles</a>
+      </section>
+    </aside>
   </div>
+</main>
 
-</div>
+<!-- medidor de cupos: nodos por cupo o carril proporcional que termina en el nodo del limite -->
+<ng-template #gauge let-used="used" let-limit="limit">
+  @if (useSlots()) {
+    <ol class="slots" aria-hidden="true">
+      @for (filled of slots(used, limit); track $index) {
+        <li [class.is-used]="filled"></li>
+      }
+    </ol>
+  } @else {
+    <div class="bar" aria-hidden="true"><span [style.width.%]="percent(used, limit)"></span></div>
+  }
+</ng-template>

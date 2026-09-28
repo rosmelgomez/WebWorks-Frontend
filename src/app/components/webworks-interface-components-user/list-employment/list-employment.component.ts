@@ -1,43 +1,38 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {MatButtonModule} from "@angular/material/button";
-import { MatCardModule} from "@angular/material/card";
 import {RouterModule} from "@angular/router";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {ReactiveFormsModule} from "@angular/forms";
 import {EmploymentService} from "../../../services/employment.service";
 import {UserService} from "../../../services/user.service";
 import {JobApplication} from "../../../model/jobApplication";
 import {JobApplicationService} from "../../../services/jobapplication";
-import {MatSnackBar} from "@angular/material/snack-bar";
 import {EmploymentSummary} from "../../../modelComplement/employmentSummary";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-list-employment',
   standalone: true,
   imports: [
     CommonModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
     RouterModule,
-    MatButtonModule,
-    MatCardModule,
   ],
   templateUrl: './list-employment.component.html',
   styleUrl: './list-employment.component.css'
 })
 
 export class ListEmploymentComponent implements OnInit{
-  dataSource = new MatTableDataSource<EmploymentSummary>()
+  dataSource = { data: [] as EmploymentSummary[] }
+  isLoading = true;
+  loadError = '';
+  feedbackMessage = '';
 
   applicationStatuses: { [key: number]: boolean } = {};
+  applicationStatusLoading: { [key: number]: boolean } = {};
+  applicationStatusErrors: { [key: number]: string } = {};
 
   constructor(
     private employmentService:EmploymentService,
     private userService:UserService,
     private jobApplicationService:JobApplicationService,
-    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit(): void {
@@ -46,20 +41,31 @@ export class ListEmploymentComponent implements OnInit{
   }
 
   getEmployment(){
-    this.employmentService.getEmployments().subscribe((data: EmploymentSummary[]) => {
-      this.dataSource = new MatTableDataSource(data);
+    this.isLoading = true;
+    this.loadError = '';
+    this.employmentService.getEmployments().subscribe({ next: (data: EmploymentSummary[]) => {
+      this.dataSource.data = data;
+      this.isLoading = false;
       const userId = parseInt(this.userService.getId());
       const employmentIds = data.map(employment => employment.id);
 
       employmentIds.forEach(employmentId => {
-        this.jobApplicationService.checkJobApplication(employmentId, userId).subscribe(
-          (status: boolean) => {
+        this.applicationStatusLoading[employmentId] = true;
+        this.applicationStatusErrors[employmentId] = '';
+        this.jobApplicationService.checkJobApplication(employmentId, userId).subscribe({
+          next: (status: boolean) => {
             this.applicationStatuses[employmentId] = status; // Store in map
-          }
-        );
+            this.applicationStatusLoading[employmentId] = false;
+          }, error: () => {
+            this.applicationStatusLoading[employmentId] = false;
+            this.applicationStatusErrors[employmentId] = 'No se pudo cargar el estado de la postulación.';
+          }});
       });
 
-    })
+    }, error: () => {
+      this.isLoading = false;
+      this.loadError = 'No se pudieron cargar los empleos.';
+    }})
   }
 
   check(idEmployment: number): boolean {
@@ -79,9 +85,7 @@ export class ListEmploymentComponent implements OnInit{
        (check:boolean)=>{
          if(check){
            this.getEmployment()
-           this.snackBar.open('We send your job application', '', {
-             duration: 1000
-           })
+           this.feedbackMessage = 'We send your job application'
          }else{
            alert("error")}
        }

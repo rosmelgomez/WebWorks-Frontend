@@ -1,29 +1,18 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
 import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { MethodPayment } from '../../../model/methodPayment';
-import { MatCardModule } from '@angular/material/card';
-import { MatListModule } from '@angular/material/list';
 import {CommonModule} from '@angular/common';
 import { MethodpaymentService } from '../../../services/methodpayment.service';
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-agregar-metodo-pago',
   standalone: true,
   imports: [
     CommonModule,
-    MatButtonModule,
-    MatNativeDateModule,
     RouterModule,
-    MatInputModule,
-    MatListModule,
-    MatCardModule,
-    MatDatepickerModule,
     ReactiveFormsModule,
     ],
   templateUrl: './agregar-metodo-pago.component.html',
@@ -35,6 +24,8 @@ export class AgregarMetodoPagoComponent implements OnInit {
   public nameUser: string = ''
   public confirm: boolean = false;
   isFlipped: boolean = false;
+  isLoading = false;
+  loadError = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -58,11 +49,16 @@ export class AgregarMetodoPagoComponent implements OnInit {
 
     if (this.methodPaymentService.getIdCardSave() != null) {
       this.confirm=true;
-      this.methodPaymentService.getMethodPaymentById(parseInt(this.methodPaymentService.getIdCardSave())).subscribe((methodPayment: MethodPayment) => {
+      this.isLoading = true;
+      this.methodPaymentService.getMethodPaymentById(parseInt(this.methodPaymentService.getIdCardSave())).subscribe({ next: (methodPayment: MethodPayment) => {
         this.cardForm.get('numberCard')!.setValue(methodPayment.numberCard);
         this.cardForm.get('dateCard')!.setValue(methodPayment.dateCard);
         this.cardForm.get('cvv')!.setValue(methodPayment.cvv);
-      })
+        this.isLoading = false;
+      }, error: () => {
+        this.isLoading = false;
+        this.loadError = 'No se pudo cargar el método de pago.';
+      }})
     }
 
   }
@@ -83,7 +79,7 @@ export class AgregarMetodoPagoComponent implements OnInit {
           this.methodPaymentService.addMethodPayment(card).subscribe({
               next: (data) => {
                 if (data) {
-                  this.router.navigateByUrl("/listMethodPayment").then( () =>console.log("redirected"));
+                  this.router.navigateByUrl("/listMethodPayment");
                   this.cardForm.reset()
                 }else{
                  alert('error al crear el card')
@@ -97,13 +93,11 @@ export class AgregarMetodoPagoComponent implements OnInit {
         this.methodPaymentService.update(card).subscribe({
             next: (_data) => {
               if(_data){
-                console.log("Card modificado")
-                this.router.navigateByUrl("/listMethodPayment").then( ()=> console.log("redirected"));
+                this.router.navigateByUrl("/listMethodPayment");
                 this.methodPaymentService.deleteIdSave()
                 this.cardForm.reset()
               }},
-            error: (err: any) => {
-              console.log(err)
+            error: (_err: any) => {
             },
           }
         )
@@ -122,7 +116,7 @@ export class AgregarMetodoPagoComponent implements OnInit {
       (check:Boolean)=>{
         if(check){
           this.deleteIdMethodPayment();
-          this.router.navigateByUrl("/listMethodPayment").then( () =>console.log("redirected"));
+          this.router.navigateByUrl("/listMethodPayment");
         }
     })
   }
@@ -144,5 +138,3 @@ export class AgregarMetodoPagoComponent implements OnInit {
   }
 
 }
-
-

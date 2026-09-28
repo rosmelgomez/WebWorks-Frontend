@@ -1,47 +1,9 @@
-<div class="conteiner">
-
-  <div class="group">
-    <mat-icon class="icon" svgIcon="busquedaIcon" aria-hidden="false" aria-label="Example thumbs up SVG icon">
-    </mat-icon>
-    <input class="input" type="search" placeholder="Buscar Informacion">
+<section class="ww ww-page ww-co-surface">
+  <label class="ww-field search"><span class="ww-label">Buscar Informacion</span><input class="ww-input" type="search" placeholder="Buscar Informacion"></label>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando empresa...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p><p class="ww-state" *ngIf="!isLoading && !loadError && dataSource.data.length === 0">No hay información de la empresa.</p>
+  <header class="ww-page-header" *ngFor="let item of dataSource.data"><div><h1 class="ww-page-title">Bienvenido</h1><p class="company-name">{{item.socialReason}}</p></div></header>
+  <div class="dashboard-lanes">
+    <section class="dashboard-lane"><span class="dashboard-node" aria-hidden="true"></span><h2>Employments</h2><p>Add and See your Employments</p><a class="ww-button ww-button-co" routerLink="/listEmployment">Employment</a></section>
+    <section class="dashboard-lane"><span class="dashboard-node" aria-hidden="true"></span><h2>Candidates</h2><p>see candidates</p><a class="ww-button ww-button-co" routerLink="/listJobApplication">Candidates</a></section>
   </div>
-
-  <div  *ngFor="let item of dataSource.data">
-    <div class="contenido">
-      <h1>Bienvenido</h1>
-      <h2>{{item.socialReason}}</h2>
-    </div>
-  </div>
-
-  <div class="Card-container" >
-
-    <div class="card-container">
-      <mat-card appearance="outlined" class="card">
-        <mat-card-header>
-          <mat-card-title >Employments</mat-card-title>
-          <mat-card-subtitle>Add and See your Employments</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions align="end">
-          <button mat-button routerLink="/listEmployment">Employment</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-
-    <div class="card-container">
-      <mat-card appearance="outlined" class="card">
-        <mat-card-header>
-          <mat-card-title>Candidates</mat-card-title>
-          <mat-card-subtitle>see candidates</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-actions align="end">
-          <button mat-button routerLink="/listJobApplication">Candidates </button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
-
-
-  </div>
-
-
-</div>
-
+</section>

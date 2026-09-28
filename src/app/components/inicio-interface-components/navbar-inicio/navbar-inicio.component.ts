@@ -1,40 +1,32 @@
-import { Component } from '@angular/core';
-import { MatToolbarModule } from '@angular/material/toolbar'
-import { MatButtonModule } from '@angular/material/button'
-import { RouterModule } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-navbar-inicio',
   standalone: true,
-  imports: [MatToolbarModule,
-    MatButtonModule,
-    RouterModule,
-    MatIconModule,
-    MatInputModule,
-  ],
+  imports: [RouterModule],
   templateUrl: './navbar-inicio.component.html',
   styleUrl: './navbar-inicio.component.css'
 })
 export class NavbarInicioComponent {
-  menuOpen = false;
+  menuOpen = signal(false);
+
+  constructor(private router: Router) {}
+
   toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-    const menu = document.querySelector('.contenidoButon');
-    if (menu) {
-      if (this.menuOpen) {
-        menu.classList.add('show');
-      } else {
-        menu.classList.remove('show');
-      }
-    }
+    this.menuOpen.update(open => !open);
   }
 
-  eliminar() {
-    this.menuOpen = !this.menuOpen;
-    const menu = document.querySelector('.contenidoButon');
-    if (menu) {
-      menu.classList.remove('show');
-    }
+  closeMenu() {
+    this.menuOpen.set(false);
+  }
+
+  // "Como funciona" vive en la pagina de inicio; desde otras rutas primero navega
+  goToHowItWorks() {
+    this.closeMenu();
+    this.router.navigateByUrl('/pageInicio').then(() => {
+      setTimeout(() => document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' }));
+    });
   }
 }

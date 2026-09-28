@@ -1,4 +1,4 @@
-import { Component,OnInit} from '@angular/core';
+import { Component,OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {  NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { NavbarInicioComponent } from './components/inicio-interface-components/navbar-inicio/navbar-inicio.component';
 import { NavbarWebworksComponent } from './components/webworks-interface-components-user/navbar-webworks/navbar-webworks.component';
@@ -8,6 +8,7 @@ import { InicioPageComponent } from './components/inicio-interface-components/in
 import {NavbarCompanyComponent} from "./components/webworks-interface-components-company/navbar-company/navbar-company.component";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-root',
   standalone: true,
   imports: [
@@ -37,30 +38,30 @@ export class AppComponent implements OnInit{
   ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateNavbar(event.urlAfterRedirects);
+        this.updateNavbar(event.urlAfterRedirects.split(/[?#]/)[0]);
       }
     });
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateInicioPage(event.urlAfterRedirects);
+        this.updateInicioPage(event.urlAfterRedirects.split(/[?#]/)[0]);
       }
     });
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateFooter(event.urlAfterRedirects);
+        this.updateFooter(event.urlAfterRedirects.split(/[?#]/)[0]);
       }
     });
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateNavbarUser(event.urlAfterRedirects);
+        this.updateNavbarUser(event.urlAfterRedirects.split(/[?#]/)[0]);
       }
     });
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.updateNavbarCompany(event.urlAfterRedirects);
+        this.updateNavbarCompany(event.urlAfterRedirects.split(/[?#]/)[0]);
       }
     });
   }

@@ -1,49 +1,108 @@
-.conteiner {
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 90%;
-  width: 100%;
-
-  background-image: linear-gradient(102.2deg, rgba(109, 118, 150, 1) 7.1%, rgba(89, 72, 79, 1) 14.7%, rgba(69, 92, 79, 1) 28%, rgba(204, 85, 67, 1) 43.4%, rgba(237, 181, 121, 1) 60.2%, rgba(219, 230, 175, 1) 76.8%);
+/* el carril y el boton toman el color del rol elegido */
+.auth {
+  --role: var(--ww-dev);
+  --role-ink: var(--ww-dev-ink);
 }
 
-.GroupForm{
-  height: 700px;
-  width: 390px;
-  text-align: center;
-  color: rgba(243, 244, 246, 1);
-  border-radius: 0.75rem;
-  background-color: rgba(17, 24, 39, 1);
-  padding: 2rem;
-  margin: 50px;
+.auth.is-co {
+  --role: var(--ww-co);
+  --role-ink: var(--ww-co);
 }
 
-.conteniner_Datos{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-.matIzquierdo{
-  width: 100%;
-  border-radius: 20px;
-  margin: 0 10px 0 0;
-}
-.example-full-width {
-  width: 100%;
-  border-radius: 20px;
-
+.auth .ww-lane {
+  --role: inherit;
 }
 
-.button {
-  width: 100%;
-  height: 40px;
-  font-size: 20px;
-  background-color: #2364af;
-  border: 1px solid white;
-  border-radius: 20px;
+.register {
+  display: grid;
+  gap: 40px;
+  max-width: 560px;
+}
+
+.role-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.role {
+  min-height: 52px;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 650;
+  background: transparent;
+  border: var(--ww-line) solid currentColor;
+  border-radius: 999px;
   cursor: pointer;
+  transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out), border-color 220ms var(--ww-ease-out);
+}
+
+.role-dev {
+  color: var(--ww-dev-ink);
+}
+
+.role-dev[aria-pressed='true'] {
+  background: var(--ww-dev);
+  border-color: var(--ww-dev);
+  color: var(--ww-ink);
+}
+
+.role-co {
+  color: var(--ww-co);
+}
+
+.role-co[aria-pressed='true'] {
+  background: var(--ww-co);
+  border-color: var(--ww-co);
+  color: #fff;
+}
+
+.role:not([aria-pressed='true']):hover {
+  background: var(--ww-ground-deep);
+}
+
+.role-dev:focus-visible {
+  outline-color: var(--ww-dev-ink);
+}
+
+.role-co:focus-visible {
+  outline-color: var(--ww-co);
+}
+
+/* boton de envio en el color del rol */
+.submit {
+  background: var(--role);
+  border-color: var(--role);
+  color: var(--ww-ink);
+}
+
+.is-co .submit {
+  color: #fff;
+}
+
+.submit:focus-visible {
+  outline-color: var(--role-ink);
+}
+
+.submit:not(:disabled):hover {
+  background: var(--role-ink);
+  border-color: var(--role-ink);
+  color: #fff;
+}
+
+.is-co .submit:not(:disabled):hover {
+  background: var(--ww-co-deep);
+  border-color: var(--ww-co-deep);
+}
+
+/* la seleccion de texto tambien pertenece al rol */
+.auth.is-co ::selection {
+  background: var(--ww-co);
+  color: #fff;
+}
+
+.ww-input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
 }

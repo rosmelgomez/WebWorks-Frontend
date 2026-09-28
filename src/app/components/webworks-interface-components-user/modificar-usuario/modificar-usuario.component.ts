@@ -1,32 +1,21 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit, signal, ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import {Router, RouterModule} from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../model/user';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import {FileService} from "../../../services/file.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {CommonModule} from '@angular/common';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-modificar-usuario',
   standalone: true,
   imports: [
-    MatFormFieldModule,
-    MatNativeDateModule,
-    MatToolbarModule,
-    MatButtonModule,
     RouterModule,
-    MatIconModule,
-    MatInputModule,
     ReactiveFormsModule,
-    MatDatepickerModule,
+    CommonModule,
   ],
   templateUrl: './modificar-usuario.component.html',
   styleUrl: './modificar-usuario.component.css'
@@ -48,6 +37,8 @@ export class ModificarUsuarioComponent implements OnInit {
   urlPhoto:string | undefined ;
 
   public updateProfileForm!: FormGroup
+  isLoading = true;
+  loadError = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -86,21 +77,22 @@ export class ModificarUsuarioComponent implements OnInit {
   async extractBase64(file: any): Promise<{ base: string | ArrayBuffer | null }> {
     return new Promise((resolve, reject) => {
       try {
-        const url = window.URL.createObjectURL(file); // Renombrado para mayor claridad
-        this.sanitizer.bypassSecurityTrustUrl(url); // `image` eliminado porque no se utiliza
+        const url = window.URL.createObjectURL(file);
+        this.sanitizer.bypassSecurityTrustUrl(url);
         const reader = new FileReader();
 
         reader.readAsDataURL(file);
         reader.onload = () => resolve({ base: reader.result });
         reader.onerror = (error) => reject(error);
       } catch (error) {
-        reject(error); // Eliminé el retorno de `null` para manejar errores correctamente
+        reject(error);
       }
     });
   }
 
   getUser( ) {
-    this.userService.getUser(this.authService.getUser() || "").subscribe((data: User) => {
+    this.isLoading = true;
+    this.userService.getUser(this.authService.getUser() || "").subscribe({ next: (data: User) => {
       this.updateProfileForm.get('name')!.setValue(data.name);
       this.updateProfileForm.get('lastname')!.setValue(data.lastname);
       this.updateProfileForm.get('birthDate')!.setValue(data.birthDate);
@@ -108,57 +100,73 @@ export class ModificarUsuarioComponent implements OnInit {
       this.updateProfileForm.get('email')!.setValue(data.email);
       this.updateProfileForm.get('username')!.setValue(data.username);
       this.urlPhoto="http://localhost:8080/webworks/media/profileAdd.png";
-    })
+      this.isLoading = false;
+    }, error: () => {
+      this.isLoading = false;
+      this.loadError = 'No se pudieron cargar los datos.';
+    }})
   }
 
   update(){
     if(this.updateProfileForm.valid){
-      if(this.updateProfileForm.get('password')!.value== this.authService.getPassword()){
-        if(this.file){
-          const formData = new FormData();
-          formData.append('file',this.file)
-          this.fileService.addFile(formData).subscribe(
-            (urlPhoto:any)=>{
-             if(urlPhoto) {
-               this.updateProfileUser(urlPhoto)
-             }else {
-               alert("hubo un error en servidor de subir una imagen ")}
-            })
-        }else{
-          this.updateProfileUser("");}
-      } else{
-        alert("ingrese la contraseña actual")}
+      if(this.file){
+        const formData = new FormData();
+        formData.append('file',this.file)
+        this.fileService.addFile(formData).subscribe({
+          next: (urlPhoto:any)=>{
+            if(urlPhoto) {
+              this.updateProfileUser(urlPhoto);
+            }else {
+              alert("hubo un error en servidor de subir una imagen ");
+            }
+          },
+          error: (err) => {
+            const message = err?.error?.message || 'Error al subir la imagen.';
+            alert(message);
+          }
+        });
+      }else{
+        this.updateProfileUser("");
+      }
     }else{
-      alert('ingrese todos los campos')}
+      alert('ingrese todos los campos');
+    }
   }
 
   updateProfileUser( urlPhoto:any){
-  this.userService.getUser(this.authService.getUser() || "").subscribe((data: User) => {
-    const user: User = {
-      id: data.id,
-      name: this.updateProfileForm.get('name')!.value,
-      lastname: this.updateProfileForm.get('lastname')!.value,
-      birthDate: this.updateProfileForm.get('birthDate')!.value,
-      phone: this.updateProfileForm.get('phone')!.value,
-      email: this.updateProfileForm.get('email')!.value,
-      username: this.updateProfileForm.get('username')!.value,
-      password: this.updateProfileForm.get('newPassword')!.value,
-      photo: urlPhoto.url,
-      rol: data.rol
-    }
-
-    if (urlPhoto==""){user.photo=data.photo}
-    this.userService.updateUser(user).subscribe(
-      (check) => {
-        if (check) {
-          this.authService.updatePassword(user.password.toString())
-          this.router.navigateByUrl("/profileUser").then(() => console.log("redirected"));
-        } else {
-          return;
+    this.userService.getUser(this.authService.getUser() || "").subscribe({
+      next: (data: User) => {
+        const user: User = {
+          id: data.id,
+          name: this.updateProfileForm.get('name')!.value,
+          lastname: this.updateProfileForm.get('lastname')!.value,
+          birthDate: this.updateProfileForm.get('birthDate')!.value,
+          phone: this.updateProfileForm.get('phone')!.value,
+          email: this.updateProfileForm.get('email')!.value,
+          username: this.updateProfileForm.get('username')!.value,
+          password: this.updateProfileForm.get('newPassword')!.value,
+          currentPassword: this.updateProfileForm.get('password')!.value,
+          photo: urlPhoto ? urlPhoto.url : data.photo,
+          rol: data.rol
         }
-      })
-  })
-}
 
+        if (urlPhoto==""){user.photo=data.photo}
+        this.userService.updateUser(user).subscribe({
+          next: (check) => {
+            if (check) {
+              this.router.navigateByUrl("/profileUser");
+            }
+          },
+          error: (err) => {
+            const message = err?.error?.message || 'Error al actualizar el usuario.';
+            alert(message);
+          }
+        });
+      },
+      error: () => {
+        alert('No se pudieron obtener los datos del usuario.');
+      }
+    });
+  }
 
 }

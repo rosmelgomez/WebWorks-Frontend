@@ -1,44 +1,260 @@
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  background-image: linear-gradient(102.2deg, rgba(109, 118, 150, 1) 7.1%, rgba(89, 72, 79, 1) 14.7%, rgba(69, 92, 79, 1) 28%, rgba(204, 85, 67, 1) 43.4%, rgba(237, 181, 121, 1) 60.2%, rgba(219, 230, 175, 1) 76.8%);
+:host {
+  display: block;
 }
 
-.form-container {
+.plans {
+  min-height: calc(100svh - 76px);
+  box-sizing: border-box;
+  padding: clamp(40px, 9vh, 104px) var(--ww-gutter) clamp(56px, 10vh, 120px);
+}
+
+.plans-head {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 24px clamp(40px, 7vw, 120px);
+  align-items: end;
+}
+
+.plans-title {
+  margin: 0;
+  font-size: clamp(2.125rem, 3.7vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.plans-title .quiet {
+  display: block;
+  font-weight: 300;
+}
+
+.plans-title .pressure {
+  display: block;
+  font-size: clamp(3.25rem, 7.2vw, 6.5rem);
+  font-weight: 800;
+  font-stretch: 88%;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.plans-lede {
+  max-width: 44ch;
+  margin: 0;
+  font-size: 1.1875rem;
+  line-height: 1.55;
+  color: var(--ww-ink-soft);
+}
+
+.plans-state {
+  display: grid;
+  justify-items: start;
+  gap: 16px;
+  margin: clamp(40px, 7vh, 72px) 0 0;
+  padding-top: 24px;
+  border-top: var(--ww-line) solid var(--ww-ink);
+  font-size: 1.1875rem;
+}
+
+.plans-state p {
+  margin: 0;
+}
+
+/* columnas separadas por la misma linea de 3px, sin tarjetas */
+.plan-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin: clamp(48px, 8vh, 88px) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--ww-line) solid var(--ww-ink);
+}
+
+.plan {
   display: flex;
   flex-direction: column;
+  gap: 24px;
+  padding: 32px clamp(20px, 2.6vw, 40px) 8px;
+  border-left: var(--ww-line) solid var(--ww-ink);
+}
+
+.plan:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.plan-name {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.plan-price {
+  margin: -12px 0 0;
+  font-size: clamp(2.25rem, 3.6vw, 3.25rem);
+  font-weight: 750;
+  font-stretch: 92%;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-price .currency {
+  margin-right: 0.12em;
+  font-size: 0.45em;
+  font-weight: 600;
+  letter-spacing: 0;
+  vertical-align: 0.9em;
+}
+
+.plan-limits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 16px 0;
+  border-top: var(--ww-line) solid var(--ww-ground-deep);
+  border-bottom: var(--ww-line) solid var(--ww-ground-deep);
+}
+
+.plan-limits div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+}
+
+.plan-limits dt {
+  font-size: 0.9375rem;
+  color: var(--ww-ink-soft);
+}
+
+.plan-limits dd {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 750;
+  line-height: 1;
+  color: var(--ww-dev-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* beneficios en el carril verde del developer */
+.plan-features {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0 0 0 32px;
+  list-style: none;
+}
+
+/* un tramo de carril por beneficio, de su nodo al siguiente: la rama termina en su ultimo commit */
+.plan-features li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(-32px + 7px - var(--ww-line) / 2);
+  top: 18px;
+  bottom: -18px;
+  width: var(--ww-line);
+  background: var(--ww-dev);
+  transform-origin: top;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .plan-features li:not(:last-child)::after {
+    animation: ww-lane-draw 420ms var(--ww-ease-out) 120ms backwards;
+  }
+}
+
+.plan-features li {
+  position: relative;
+  font-size: 1.0625rem;
+  line-height: 1.4;
+}
+
+.plan-features li::before {
+  content: '';
+  position: absolute;
+  left: -32px;
+  top: 4px;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: var(--ww-line) solid var(--ww-dev);
+  background: var(--ww-ground);
+}
+
+.plan-choose {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 600px;
-  width: auto;
-  border-radius: 0.75rem;
-  background-color: rgba(17, 24, 39, 1);
-  color: rgba(243, 244, 246, 1);
-  margin: 10px;
-  padding: 2rem;
-  text-align: center;
-  max-width: 400px;
+  gap: 10px;
+  margin-top: auto;
+  min-height: 52px;
+  padding: 0 24px;
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 650;
+  color: var(--ww-ink);
+  background: var(--ww-dev);
+  border: var(--ww-line) solid var(--ww-dev);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out), border-color 220ms var(--ww-ease-out);
 }
 
-.titulo {
-  text-align: center;
-  font-size: 2rem;
+.plan-choose:hover {
+  background: var(--ww-dev-ink);
+  border-color: var(--ww-dev-ink);
+  color: #fff;
 }
 
-.imagenes img {
-  height: 100%;
-  width: 90%;
-  border: 1px solid white;
-  border-radius: 50px 15%;
+.plan-choose:active {
+  transform: translateY(1px);
 }
 
-.button {
+.plan-choose:focus-visible {
+  outline-color: var(--ww-dev-ink);
+}
 
-  background-color: #2364af;
-  border: 1px solid white;
-  border-radius: 20px;
-  padding: 10px 50px;
+.plan-choose svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 220ms var(--ww-ease-out);
+}
+
+.plan-choose:hover svg {
+  transform: translateX(4px);
+}
+
+.plans-note {
+  margin: 28px 0 0;
+  font-size: 0.9375rem;
+  color: var(--ww-ink-soft);
+}
+
+@media (max-width: 900px) {
+  .plans-head {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .plan-list {
+    grid-template-columns: 1fr;
+  }
+
+  .plan,
+  .plan:first-child {
+    padding: 28px 0 32px;
+    border-left: 0;
+  }
+
+  .plan + .plan {
+    border-top: var(--ww-line) solid var(--ww-ink);
+  }
 }

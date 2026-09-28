@@ -1,10 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 import ApexCharts from 'apexcharts'
@@ -13,16 +7,11 @@ import { ProjectService } from '../../../services/project.service';
 import { CommonModule } from '@angular/common';
 import {RepositoryService} from "../../../services/repository.service";
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-list-proyecto',
   standalone: true,
   imports: [
-    MatTableModule,
-    MatCardModule,
-    MatSnackBarModule,
-    MatIconModule,
-    MatButtonModule,
     RouterModule,
-    MatInputModule,
     CommonModule,
   ],
   templateUrl: './list-proyecto.component.html',
@@ -32,7 +21,9 @@ export class ListProyectoComponent implements OnInit {
   displayedColumns: string[] = ['name', 'dateCreate', 'description', 'language', 'actions']
   name: string = ''
   numProjects: string = '';
-  dataSource = new MatTableDataSource<Project>()
+  dataSource = { data: [] as Project[] }
+  isLoading = true;
+  loadError = '';
   private chart: ApexCharts | null = null;
 
   constructor(
@@ -41,25 +32,29 @@ export class ListProyectoComponent implements OnInit {
     private router: Router,
   ) { }
 
-
-
   ngOnInit(): void {
     console.clear();
     this.getProjectRepository();
   }
 
   getProjectRepository() {
-      this.projectService.getProjectRepository(parseInt(this.repositoryService.getIdSave())).subscribe((data: Project[]) => {
-          this.dataSource = new MatTableDataSource(data);
+      this.isLoading = true;
+      this.loadError = '';
+      this.projectService.getProjectRepository(parseInt(this.repositoryService.getIdSave())).subscribe({ next: (data: Project[]) => {
+          this.dataSource.data = data;
           this.name=this.repositoryService.getNameSave();
           this.numProjects=this.repositoryService.getNumProjectsSave();
+          this.isLoading = false;
           this.graphic(data);
-    })
+    }, error: () => {
+      this.isLoading = false;
+      this.loadError = 'No se pudieron cargar los proyectos.';
+    }})
   }
 
   saveId(id: number) {
     this.projectService.saveId(id)
-    this.router.navigate(["/agregarProyecto"]).then(() => {console.log("rediriendo al form proyecto")})
+    this.router.navigate(["/agregarProyecto"]);
   }
   deleteIdSave(){
     if(this.dataSource.data.length >= parseInt(this.numProjects)){
@@ -67,16 +62,14 @@ export class ListProyectoComponent implements OnInit {
       return;
     }
     this.projectService.deleteIdSave();
-    this.router.navigate(["/agregarProyecto"]).then(() => {console.log("rediriendo al form proyecto")})
+    this.router.navigate(["/agregarProyecto"]);
   }
   delete(id: number) {
     this.projectService.delete(id).subscribe({
       next: (_data) => {
-        console.log('proyecto eliminado')
         this.getProjectRepository();
         this.router.navigate(["/listProyecto"]).then()
-      }, error(err: any) {
-        console.log(err)
+      }, error(_err: any) {
       }
     })
   }
@@ -115,7 +108,7 @@ export class ListProyectoComponent implements OnInit {
   }
 
   this.chart = new ApexCharts(document.querySelector("#chart"), options);
-  this.chart.render().then(() => {console.log("se creo el garfico")});
+  this.chart.render();
 }
 
 }

@@ -1,16 +1,10 @@
-import { Component, OnInit} from '@angular/core';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {JobApplicationService} from "../../../services/jobapplication";
 import {CompanyService} from "../../../services/company.service";
 import {JobApplicationSummary} from "../../../modelComplement/jobApplicationSummary";
 import {CommonModule} from "@angular/common";
-import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import {MatTooltipModule} from "@angular/material/tooltip";
 import {RouterModule} from "@angular/router";
 import {UserService} from "../../../services/user.service";
-import {DomSanitizer} from "@angular/platform-browser";
 
 const userIcon = `
 <svg xmlns="http://www.w3.org/2000/svg" id="Outline" viewBox="0 0 24 24" width="512" height="512"><path d="M12,12A6,6,0,1,0,6,6,6.006,6.006,0,0,0,12,12ZM12,2A4,4,0,1,1,8,6,4,4,0,0,1,12,2Z"/><path d="M12,14a9.01,9.01,0,0,0-9,9,1,1,0,0,0,2,0,7,7,0,0,1,14,0,1,1,0,0,0,2,0A9.01,9.01,0,0,0,12,14Z"/></svg>
@@ -26,54 +20,53 @@ const userRefuseIcon = `
 `;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-list-job-application',
   standalone: true,
   imports: [
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTooltipModule,
     RouterModule,
-    MatInputModule,
     CommonModule,],
   templateUrl: './list-job-application.component.html',
   styleUrl: './list-job-application.component.css'
 })
 export class ListJobApplicationComponent implements OnInit {
   displayedColumnsPending: string[] = ['id', 'status', 'dateApplication','namePostulation','nameEmployment','positionEmployment', 'actions'];
-  dataSourcePending = new MatTableDataSource<JobApplicationSummary>();
+  dataSourcePending = { data: [] as JobApplicationSummary[] };
 
   displayedColumnsAccepted: string[] = ['id', 'status', 'dateApplication','namePostulation','nameEmployment','positionEmployment', 'actions'];
-  dataSourceAccepted = new MatTableDataSource<JobApplicationSummary>();
+  dataSourceAccepted = { data: [] as JobApplicationSummary[] };
 
   displayedColumnsRefuse: string[] = ['id', 'status', 'dateApplication','namePostulation','nameEmployment','positionEmployment', 'actions'];
-  dataSourceRefuse = new MatTableDataSource<JobApplicationSummary>();
+  dataSourceRefuse = { data: [] as JobApplicationSummary[] };
+  filterPending = '';
+  filterAccepted = '';
+  filterRefuse = '';
+  loadingPending = true;
+  loadingAccepted = true;
+  loadingRefuse = true;
+  errorPending = '';
+  errorAccepted = '';
+  errorRefuse = '';
 
   applyFilterPending(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourcePending.filter = filterValue.trim().toLowerCase();
+    this.filterPending = filterValue.trim().toLowerCase();
   }
 
   applyFilterAccepted(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceAccepted.filter = filterValue.trim().toLowerCase();
+    this.filterAccepted = filterValue.trim().toLowerCase();
   }
   applyFilterRefuse(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceRefuse.filter = filterValue.trim().toLowerCase();
+    this.filterRefuse = filterValue.trim().toLowerCase();
   }
 
   constructor(
     private jobApplicationService: JobApplicationService,
     private companyService: CompanyService,
     private userService: UserService,
-    iconRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer
-    ) {
-    iconRegistry.addSvgIconLiteral('userIcon', sanitizer.bypassSecurityTrustHtml(userIcon));
-    iconRegistry.addSvgIconLiteral('userCheckIcon', sanitizer.bypassSecurityTrustHtml(userCheckIcon));
-    iconRegistry.addSvgIconLiteral('userRefuseIcon', sanitizer.bypassSecurityTrustHtml(userRefuseIcon));
-  }
+    ) {}
 
   ngOnInit() {
     this.getJobApplicationPendingByCompany()
@@ -82,26 +75,38 @@ export class ListJobApplicationComponent implements OnInit {
   }
 
   getJobApplicationPendingByCompany(){
-  this.jobApplicationService.getJobApplicationStatusByCompany(parseInt(this.companyService.getIdCompany()),"PENDING").subscribe(
-    (jobApplications :JobApplicationSummary[])=>{
+  this.loadingPending = true;
+  this.jobApplicationService.getJobApplicationStatusByCompany(parseInt(this.companyService.getIdCompany()),"PENDING").subscribe({
+    next: (jobApplications :JobApplicationSummary[])=>{
       this.dataSourcePending.data = jobApplications;
-    }
-  )}
+      this.loadingPending = false;
+    }, error: () => {
+      this.loadingPending = false;
+      this.errorPending = 'No se pudieron cargar las postulaciones pendientes.';
+    }})}
 
   getJobApplicationAcceptedByCompany(){
-    this.jobApplicationService.getJobApplicationStatusByCompany(parseInt(this.companyService.getIdCompany()),"ACCEPTED").subscribe(
-      (jobApplications :JobApplicationSummary[])=>{
+    this.loadingAccepted = true;
+    this.jobApplicationService.getJobApplicationStatusByCompany(parseInt(this.companyService.getIdCompany()),"ACCEPTED").subscribe({
+      next: (jobApplications :JobApplicationSummary[])=>{
         this.dataSourceAccepted.data = jobApplications;
-      }
-    )
+        this.loadingAccepted = false;
+      }, error: () => {
+        this.loadingAccepted = false;
+        this.errorAccepted = 'No se pudieron cargar las postulaciones aceptadas.';
+      }})
   }
 
   getJobApplicationRefuseByCompany(){
-    this.jobApplicationService.getJobApplicationStatusByCompany(parseInt(this.companyService.getIdCompany()),"REFUSE").subscribe(
-      (jobApplications :JobApplicationSummary[])=>{
+    this.loadingRefuse = true;
+    this.jobApplicationService.getJobApplicationStatusByCompany(parseInt(this.companyService.getIdCompany()),"REFUSE").subscribe({
+      next: (jobApplications :JobApplicationSummary[])=>{
         this.dataSourceRefuse.data = jobApplications;
-      }
-    )
+        this.loadingRefuse = false;
+      }, error: () => {
+        this.loadingRefuse = false;
+        this.errorRefuse = 'No se pudieron cargar las postulaciones rechazadas.';
+      }})
   }
 
   saveIdUser(idUser:number){
@@ -128,6 +133,11 @@ export class ListJobApplicationComponent implements OnInit {
         }
       }
     )
+  }
+
+  filtered(items: JobApplicationSummary[], term: string): JobApplicationSummary[] {
+    if (!term) return items;
+    return items.filter(item => JSON.stringify(item).toLowerCase().includes(term));
   }
 
 }

@@ -1,106 +1,61 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import {Repository} from "../model/repository";
 import {Url} from "../model/url";
 
-
-const base_url = Url.urlBackend + '/webworks/repository';
+const base_url = Url.urlBackend + '/repository';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RepositoryService {
+  constructor(private http: HttpClient) { }
 
-  constructor(private http:HttpClient,  private Auth:AuthService) { }
-
-  getRepositoriesUser(id:number)  {
-    const url= base_url + `/user/repositoryByUser/${id}`;
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<Repository[]>(endpoint,{headers});
+  getRepositoriesUser(id: number) {
+    return this.http.get<Repository[]>(base_url + `/repositoryByUser/${id}`, { withCredentials: true });
   }
 
-  getRepositoryById(id:number){
-    const url= base_url + `/user/repositoryById/${id}`;
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<Repository>(endpoint, { headers });
+  getRepositoryById(id: number) {
+    return this.http.get<Repository>(base_url + `/repositoryById/${id}`, { withCredentials: true });
   }
 
-  andRepository(repository:Repository) {
-    const url=base_url+'/user/addRepository'
-    const endpoint = `${url}`;
-    const token = this.Auth.getToken();
-     // Crea los encabezados HTTP con el token
-     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.post<boolean>(endpoint,repository,{headers});
+  andRepository(repository: Repository) {
+    return this.http.post<boolean>(base_url + '/addRepository', repository, { withCredentials: true });
   }
 
-  update(repository:Repository){
-    const url=base_url+'/user/updateRepository'
-    const endpoint = `${url}`;
-    const token = this.Auth.getToken();
-     // Crea los encabezados HTTP con el token
-     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-
-    });
-    return this.http.put<boolean>(endpoint,repository,{headers});
+  update(repository: Repository) {
+    return this.http.put<boolean>(base_url + '/updateRepository', repository, { withCredentials: true });
   }
 
-  delete(id:number){
-    const url=base_url+`/user/deleteRepository/${id}`
-    const endpoint = `${url}`;
-    const token = this.Auth.getToken();
-     // Crea los encabezados HTTP con el token
-     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    return this.http.delete<any>(endpoint,{headers});
+  delete(id: number) {
+    return this.http.delete<any>(base_url + `/deleteRepository/${id}`, { withCredentials: true });
   }
 
-  saveDateImport(id:number, name:string, numProjects:number){
-    localStorage.setItem('idRepository',id.toString())
-    localStorage.setItem('nameRepository',name)
-    localStorage.setItem('numProjects',numProjects.toString())
+  saveDateImport(id: number, name: string, numProjects: number) {
+    localStorage.setItem('idRepository', id.toString())
+    localStorage.setItem('nameRepository', name)
+    localStorage.setItem('numProjects', numProjects.toString())
   }
 
-  getIdSave() : string{
+  getIdSave(): string {
     return localStorage.getItem('idRepository')!;
   }
 
-  getNameSave() : string{
+  getNameSave(): string {
     return localStorage.getItem('nameRepository')!;
   }
 
-  getNumProjectsSave() : string{
+  getNumProjectsSave(): string {
     return localStorage.getItem('numProjects')!;
   }
 
-  deleteDateSave(){
+  deleteDateSave() {
     localStorage.removeItem('idRepository');
     localStorage.removeItem('nameRepository');
     localStorage.removeItem('numProjects');
   }
 
-  //Company-method
-  getRepositoryUserCompany(idUser:number){
-
-    const url= base_url + `/company/repositoryByUserCompany/${idUser}`;
-    const token = this.Auth.getToken();
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    const endpoint = `${url}`;
-    return this.http.get<Repository[]>(endpoint,{headers});
+  getRepositoryUserCompany(idUser: number) {
+    return this.http.get<Repository[]>(base_url + `/repositoryByUserCompany/${idUser}`, { withCredentials: true });
   }
 }

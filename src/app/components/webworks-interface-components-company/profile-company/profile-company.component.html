@@ -1,18 +1,5 @@
-<div class="conteiner">
-  <div class="card-container"  *ngFor="let item of dataSource.data">
-    <mat-card appearance="outlined" class="card">
-      <div class="information">
-      <h1>Profile Company</h1>
-      <p>Ruc : {{item.ruc}}</p>
-      <p>Social Reason : {{item.socialReason}}</p>
-      <p>Sector : {{item.sector}}</p>
-      <p>Legal Representative : {{item.legalRepresentative}}</p>
-      <p>Description : {{item.description}}</p>
-      <p>Username : {{item.username}}</p>
-      </div>
-      <mat-card-actions align="end">
-        <button mat-button routerLink="/updateProfileCompany">Update</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-</div>
+<section class="ww ww-page ww-co-surface">
+  <header class="ww-page-header"><h1 class="ww-page-title">Profile Company</h1><a class="ww-button ww-button-co" routerLink="/updateProfileCompany">Update</a></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando perfil...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p><p class="ww-state" *ngIf="!isLoading && !loadError && dataSource.data.length === 0">No hay información de perfil.</p>
+  <article class="ww-profile profile-only" *ngFor="let item of dataSource.data"><dl class="ww-details"><div><dt>Ruc :</dt><dd>{{item.ruc}}</dd></div><div><dt>Social Reason :</dt><dd>{{item.socialReason}}</dd></div><div><dt>Sector :</dt><dd>{{item.sector}}</dd></div><div><dt>Legal Representative :</dt><dd>{{item.legalRepresentative}}</dd></div><div><dt>Description :</dt><dd>{{item.description}}</dd></div><div><dt>Username :</dt><dd>{{item.username}}</dd></div></dl></article>
+</section>

@@ -7,7 +7,7 @@
 </ng-container>
 
 <ng-template #mainContentUser >
-  <div class="main-container" *ngIf="currentNavbarUser === 'user' ; else mainContentCompany">
+  <div class="main-container ww dev-shell" *ngIf="currentNavbarUser === 'user' ; else mainContentCompany">
     <app-navbar-webworks ></app-navbar-webworks>
     <div class="outlet-container" >
       <router-outlet></router-outlet>
@@ -16,7 +16,7 @@
 </ng-template>
 
 <ng-template #mainContentCompany >
-  <div class="main-container" *ngIf="currentNavbarCompany === 'company'">
+  <div class="main-container ww company-shell" *ngIf="currentNavbarCompany === 'company'">
     <app-navbar-company ></app-navbar-company>
     <div class="outlet-container" >
       <router-outlet></router-outlet>

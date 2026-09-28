@@ -1,24 +1,25 @@
-<div class="container">
-    <form autocomplete="off" [formGroup]="projectForm" class="form-container">
-        <H1>Registrar un proyecto</H1>
-        <mat-form-field class="example-full-width">
-            <mat-label>Nombre del proyecto</mat-label>
-            <input matInput type="text" placeholder="name proyecto" formControlName="name" required>
-        </mat-form-field>
-
-      <mat-form-field class="example-full-width">
-        <mat-label>Descripcion</mat-label>
-        <textarea matInput type="text" placeholder="description" formControlName="description" required></textarea>
-      </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-            <mat-label>Lenguaje</mat-label>
-            <input matInput type="text" placeholder="language" formControlName="language" required>
-        </mat-form-field>
-
-        <button class="button" *ngIf="id==undefined ||false " (click)="addOrUpdate()" color="primary">Registrar</button>
-        <button class="button" *ngIf="id!=undefined ||id!=null " (click)="addOrUpdate()" color="primary">Modificar</button>
-        <button class="button" [routerLink]="'/listProyecto'" color="primary">Ver proyectos</button>
-
-    </form>
-</div>
+<section class="ww ww-page ww-form-page">
+  <header class="ww-page-header"><h1 class="ww-page-title">{{ isEditMode ? 'Modificar un proyecto' : 'Registrar un proyecto' }}</h1></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando proyecto...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <form autocomplete="off" [formGroup]="projectForm" class="ww-form" (ngSubmit)="addOrUpdate()" *ngIf="!isLoading && !loadError">
+    <fieldset class="ww-lane">
+      <div class="ww-commit" [class.is-done]="projectForm.get('name')?.valid">
+        <h2 class="ww-commit-title">Nombre del proyecto</h2>
+        <label class="ww-field"><span class="ww-label">Nombre del proyecto</span><input class="ww-input" type="text" placeholder="name proyecto" formControlName="name" required></label>
+      </div>
+      <div class="ww-commit" [class.is-done]="projectForm.get('description')?.valid">
+        <h2 class="ww-commit-title">Descripcion</h2>
+        <label class="ww-field"><span class="ww-label">Descripcion</span><textarea class="ww-input" placeholder="description" formControlName="description" required></textarea></label>
+      </div>
+      <div class="ww-commit" [class.is-done]="projectForm.get('language')?.valid">
+        <h2 class="ww-commit-title">Lenguaje</h2>
+        <label class="ww-field"><span class="ww-label">Lenguaje</span><input class="ww-input" type="text" placeholder="language" formControlName="language" required></label>
+      </div>
+    </fieldset>
+    <div class="ww-form-actions">
+      <button class="ww-button ww-button-dev" type="submit" *ngIf="!isEditMode">Registrar</button>
+      <button class="ww-button ww-button-dev" type="submit" *ngIf="isEditMode">Modificar</button>
+      <a class="ww-button ww-button-outline" routerLink="/listProyecto">Ver proyectos</a>
+    </div>
+  </form>
+</section>

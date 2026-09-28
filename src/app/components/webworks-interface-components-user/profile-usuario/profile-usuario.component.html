@@ -1,21 +1,5 @@
-<div class="conteiner">
-  <div class="card-container"  *ngFor="let item of dataSource.data">
-    <mat-card appearance="outlined" class="card">
-      <div class="information">
-        <h1>Profile User</h1>
-        <p> Name: {{item.name}}</p>
-        <p> LastName: {{item.lastname}}</p>
-        <p> Birth Date: {{item.birthDate | date:'dd/MM/yyyy'}}</p>
-        <p> Phone: {{item.phone}}</p>
-        <p> Email: {{item.email}}</p>
-        <p> Username: {{item.username}}</p>
-      </div>
-      <div  *ngIf="item.photo">
-        <img [ngSrc]="item.photo.toString()"  alt="" width="200" height="200">
-      </div>
-      <mat-card-actions align="end">
-        <button mat-button routerLink="/updateProfile">Update</button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-</div>
+<section class="ww ww-page">
+  <header class="ww-page-header"><h1 class="ww-page-title">Profile User</h1><a class="ww-button ww-button-dev" routerLink="/updateProfile">Update</a></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando perfil...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p><p class="ww-state" *ngIf="!isLoading && !loadError && dataSource.data.length === 0">No hay información de perfil.</p>
+  <article class="ww-profile" *ngFor="let item of dataSource.data"><dl class="ww-details"><div><dt>Name:</dt><dd>{{item.name}}</dd></div><div><dt>LastName:</dt><dd>{{item.lastname}}</dd></div><div><dt>Birth Date:</dt><dd>{{item.birthDate | date:'dd/MM/yyyy'}}</dd></div><div><dt>Phone:</dt><dd>{{item.phone}}</dd></div><div><dt>Email:</dt><dd>{{item.email}}</dd></div><div><dt>Username:</dt><dd>{{item.username}}</dd></div></dl><img *ngIf="item.photo" [ngSrc]="item.photo.toString()" alt="" width="200" height="200"></article>
+</section>

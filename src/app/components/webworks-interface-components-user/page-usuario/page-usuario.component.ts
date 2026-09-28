@@ -1,126 +1,154 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatListModule } from '@angular/material/list';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit, computed, signal, ChangeDetectionStrategy } from '@angular/core';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 import { User } from '../../../model/user';
+import { Repository } from '../../../model/repository';
+import { SubscriptionCheck } from '../../../modelComplement/subscriptioCheck';
+import { EmploymentSummary } from '../../../modelComplement/employmentSummary';
+import { CommentProfileSummary } from '../../../modelComplement/commentProfileSummary';
 import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
 import { SubscriptionService } from '../../../services/subscription.service';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import {MatMenuModule} from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
-import {MatCardModule} from "@angular/material/card";
-import {RepositoryService} from "../../../services/repository.service";
-import {ProjectService} from "../../../services/project.service";
-import {MethodpaymentService} from "../../../services/methodpayment.service";
-import {Subscription} from "../../../model/subscription";
-import {SubscriptionCheck} from "../../../modelComplement/subscriptioCheck";
+import { RepositoryService } from '../../../services/repository.service';
+import { ProjectService } from '../../../services/project.service';
+import { MethodpaymentService } from '../../../services/methodpayment.service';
+import { EmploymentService } from '../../../services/employment.service';
+import { CommentProfileService } from '../../../services/commentprofile.service';
 
-const busquedaIcon = `
-<svg xmlns="http://www.w3.org/2000/svg"   id="Capa_1" x="0px" y="0px" viewBox="0 0 513.749 513.749" style="enable-background:new 0 0 513.749 513.749;" xml:space="preserve" width="512" height="512">
-<g>
-	<path d="M504.352,459.061l-99.435-99.477c74.402-99.427,54.115-240.344-45.312-314.746S119.261-9.277,44.859,90.15   S-9.256,330.494,90.171,404.896c79.868,59.766,189.565,59.766,269.434,0l99.477,99.477c12.501,12.501,32.769,12.501,45.269,0   c12.501-12.501,12.501-32.769,0-45.269L504.352,459.061z M225.717,385.696c-88.366,0-160-71.634-160-160s71.634-160,160-160   s160,71.634,160,160C385.623,314.022,314.044,385.602,225.717,385.696z"/>
-</g>
-</svg>
-`;
+type Load = 'loading' | 'ready' | 'error';
+
+// limite a partir del cual los cupos se muestran como numero y no como nodos
+const MAX_SLOTS = 12;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-page-usuario',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatFormFieldModule,
-    RouterModule,
-    MatListModule,
-    MatTableModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatSelectModule,
-    MatMenuModule,
-    MatIconModule,
-    MatCardModule,
-  ],
+  imports: [RouterModule, DatePipe, NgTemplateOutlet],
   templateUrl: './page-usuario.component.html',
   styleUrl: './page-usuario.component.css'
 })
-
 export class PageUsuarioComponent implements OnInit {
+  user = signal<User | null>(null);
+  plan = signal<SubscriptionCheck | null>(null);
+  repositories = signal<Repository[]>([]);
+  employments = signal<EmploymentSummary[]>([]);
+  comments = signal<CommentProfileSummary[]>([]);
 
+  userState = signal<Load>('loading');
+  repoState = signal<Load>('loading');
+  jobState = signal<Load>('loading');
+  commentState = signal<Load>('loading');
+  planState = signal<Load>('loading');
 
-  dataSource = new MatTableDataSource<User>()
+  hasActiveSubscription = computed(() => !!this.plan()?.status);
+  // el uso solo se muestra cuando plan y repositorios ya llegaron (nunca limites supuestos)
+  usageReady = computed(() => this.planState() === 'ready' && this.repoState() === 'ready');
+  // una sola codificacion para ambos medidores
+  useSlots = computed(() => this.repoLimit() <= MAX_SLOTS && this.projectLimit() <= MAX_SLOTS);
+
+  projectCount = computed(() => this.repositories().reduce((total, repo) => total + (repo.numberProject || 0), 0));
+  repoLimit = computed(() => this.plan()?.maxNumberRepository ?? 0);
+  projectLimit = computed(() => this.plan()?.maxNumberProject ?? 0);
+  planName = computed(() => {
+    if (!this.plan()?.status) return 'Sin suscripción activa';
+    return this.plan()?.planName ? `Plan ${this.plan()?.planName}` : 'Plan Activo';
+  });
+
   constructor(
     private userService: UserService,
-    private authService:AuthService,
-    private subscriptionService:SubscriptionService,
+    private authService: AuthService,
+    private subscriptionService: SubscriptionService,
     private repositoryService: RepositoryService,
     private projectService: ProjectService,
-    private methodPaymentService:MethodpaymentService,
-    private iconRegistry: MatIconRegistry,
-    private sanitizer: DomSanitizer
-  ) {this.iconRegistry.addSvgIconLiteral('busquedaIcon', this.sanitizer.bypassSecurityTrustHtml(busquedaIcon));
-  }
+    private methodPaymentService: MethodpaymentService,
+    private employmentService: EmploymentService,
+    private commentService: CommentProfileService,
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
-    console.clear()
+    this.deleteInformation();
     this.getUserInformation();
-    this.checkSubscription();
-
-   this.deleteInformation();
+    this.getEmployments();
   }
 
   getUserInformation() {
-    this.userService.getUser(this.authService.getUser() || "").subscribe((data: User) => {
-      this.dataSource.data=[data]
-      this.subscriptionService.checkSubscription(parseInt(this.userService.getId())).subscribe(
-        (check:SubscriptionCheck)=>{
-          this.createSubscriptionFree(check.status,check.amount)
-        })
-    })
+    this.userState.set('loading');
+    this.userService.getUser(this.authService.getUser() || '').subscribe({
+      next: (data: User) => {
+        this.user.set(data);
+        this.userState.set('ready');
+        this.getPlan(data.id);
+        this.getRepositories(data.id);
+        this.getComments(data.id);
+      },
+      error: () => {
+        this.userState.set('error');
+        this.repoState.set('error');
+        this.commentState.set('error');
+        this.planState.set('error');
+      },
+    });
   }
 
-  deleteInformation(){
-  this.repositoryService.deleteDateSave();
-  this.projectService.deleteIdSave();
-  this.methodPaymentService.deleteIdSave();
+  getPlan(idUser: number) {
+    this.subscriptionService.checkSubscription(idUser).subscribe({
+      next: (check: SubscriptionCheck) => {
+        this.plan.set(check);
+        this.planState.set('ready');
+      },
+      error: () => this.planState.set('error'),
+    });
   }
 
-  checkSubscription():Boolean   {
-    return this.subscriptionService.getCheckSubscription()
+  getRepositories(idUser: number) {
+    this.repoState.set('loading');
+    this.repositoryService.getRepositoriesUser(idUser).subscribe({
+      next: repos => { this.repositories.set(repos); this.repoState.set('ready'); },
+      error: () => this.repoState.set('error'),
+    });
   }
 
-   createSubscriptionFree(check:boolean, amount:number){
+  getEmployments() {
+    this.jobState.set('loading');
+    this.employmentService.getEmployments().subscribe({
+      next: jobs => { this.employments.set(jobs.slice(0, 3)); this.jobState.set('ready'); },
+      error: () => this.jobState.set('error'),
+    });
+  }
 
-    if(!check && amount < 0){
-      const premium: Subscription = {
-        id: 0,
-        dateStart: new Date,
-        dateEnd: addMonths(new Date(), 6),
-        amountTotal:0,
-        id_user: parseInt(this.userService.getId()),
-        id_plan:1,
-        id_methodPayment:  0,
-        id_promotionCode: 0,
-      }
-      this.subscriptionService.addSubscription(premium).subscribe(
-        (check:boolean)=>{
-          if(check){
-            console.log(check)
-          }
-        }
-      )
-    }
-   }
-}
+  getComments(idUser: number) {
+    this.commentState.set('loading');
+    this.commentService.getComment(idUser).subscribe({
+      next: comments => { this.comments.set(comments.slice(0, 2)); this.commentState.set('ready'); },
+      error: () => this.commentState.set('error'),
+    });
+  }
 
-const addMonths = (date: Date, months: number): Date => {
-  const result = new Date(date);
-  result.setMonth(result.getMonth() + months);
-  return result;
+  retryUser() {
+    this.getUserInformation();
+  }
+
+  // cupos del plan como nodos: llenos los usados, vacios los libres
+  slots(used: number, limit: number): boolean[] {
+    return Array.from({ length: limit }, (_, i) => i < used);
+  }
+
+  // uso proporcional cuando el limite es demasiado alto para dibujar un nodo por cupo
+  percent(used: number, limit: number): number {
+    return limit > 0 ? Math.min(100, Math.round((used / limit) * 100)) : 0;
+  }
+
+  // abrir un repositorio: misma navegacion que la lista de repositorios
+  openRepository(repo: Repository) {
+    this.repositoryService.saveDateImport(repo.id, String(repo.name), repo.numberProject);
+    this.router.navigateByUrl('/listProyecto');
+  }
+
+  deleteInformation() {
+    this.repositoryService.deleteDateSave();
+    this.projectService.deleteIdSave();
+    this.methodPaymentService.deleteIdSave();
+  }
 }

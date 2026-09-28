@@ -1,25 +1,62 @@
-<div class="container" [ngStyle]="{ 'min-height': height }" >
-  <div class="form-container" *ngFor="let item of dataSource.data">
-    <div class="imagenes">
-      <img [src]="item.image" alt="Descripción de la imagen">
-    </div>
-    <div class="contenido">
-      <h1 class="titulo">{{item.name}}</h1>
-      <p *ngIf="item.description1!=null" >- {{item.description1}}</p>
-      <p *ngIf="item.description2!=null" >- {{item.description2}}</p>
-      <p *ngIf="item.description3!=null" >- {{item.description3}}</p>
-      <p *ngIf="item.description4!=null" >- {{item.description4}}</p>
-      <p *ngIf="item.description5!=null" >- {{item.description5}}</p>
-      <p *ngIf="item.description6!=null" >- {{item.description6}}</p>
-      <p *ngIf="item.description7!=null" >- {{item.description7}}</p>
-      <p *ngIf="item.description8!=null" >- {{item.description8}}</p>
-      <p *ngIf="item.maxNumberRepository!=null" >-{{item.maxNumberRepository}} Repositorios</p>
-      <p *ngIf="item.maxNumberProject!=null" >- {{item.maxNumberProject}} Proyectos</p>
-      <p  class="titulo" *ngIf="item.price!=0" >S/.{{item.price}}</p>
-      <p class="titulo" *ngIf="item.price==0">free</p>
+<main class="ww plans">
+  <header class="plans-head">
+    <h1 class="plans-title">
+      <span class="quiet">Elige tu</span>
+      <span class="pressure">plan.</span>
+    </h1>
+    <p class="plans-lede">
+      Los planes definen cuántos repositorios y proyectos puedes publicar en tu portafolio de developer.
+    </p>
+  </header>
 
+  @if (loading()) {
+    <p class="plans-state" role="status">Cargando planes…</p>
+  } @else if (loadError()) {
+    <div class="plans-state" role="alert">
+      <p>No pudimos cargar los planes. Revisa tu conexión e inténtalo otra vez.</p>
+      <button type="button" class="ww-button" (click)="getPlanes()">Reintentar</button>
     </div>
-    <button class="button" (click)="savePlan(item.id,item.price)"
-      color="primary">Seleccione</button>
-  </div>
-</div>
+  } @else if (plans().length === 0) {
+    <p class="plans-state" role="status">Todavía no hay planes publicados.</p>
+  } @else {
+    <ol class="plan-list" aria-label="Planes disponibles">
+      @for (plan of plans(); track plan.id) {
+        <li class="plan">
+          <h2 class="plan-name">{{ plan.name }}</h2>
+          <p class="plan-price">
+            @if (plan.price > 0) {
+              <span class="currency">S/</span>{{ plan.price | number: '1.2-2' }}
+            } @else {
+              Gratis
+            }
+          </p>
+
+          <dl class="plan-limits">
+            <div>
+              <dt>Repositorios</dt>
+              <dd>{{ plan.maxNumberRepository }}</dd>
+            </div>
+            <div>
+              <dt>Proyectos</dt>
+              <dd>{{ plan.maxNumberProject }}</dd>
+            </div>
+          </dl>
+
+          @if (features(plan).length) {
+            <ul class="plan-features">
+              @for (feature of features(plan); track feature) {
+                <li>{{ feature }}</li>
+              }
+            </ul>
+          }
+
+          <button type="button" class="plan-choose" (click)="savePlan(plan.id, plan.price)">
+            Elegir {{ plan.name }}
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+          </button>
+        </li>
+      }
+    </ol>
+    <p class="plans-note">Precios de ejemplo del proyecto académico.</p>
+  }
+</main>

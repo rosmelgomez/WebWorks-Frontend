@@ -1,70 +1,9 @@
-<div class="conteiner">
-  <form [formGroup]="updateProfileForm" autocomplete="off" class="form-container" >
-
-    <H1>Update Profile</H1>
-
-    <div class="conteniner_Datos">
-      <mat-form-field class="matIzquierdo">
-        <mat-label>RUC</mat-label>
-        <input matInput type="text" placeholder="ruc" formControlName="ruc" required maxlength="11">
-      </mat-form-field>
-
-      <mat-form-field class="example-full-width">
-        <mat-label>Social Reason</mat-label>
-        <input matInput type="text" placeholder="socialReason" formControlName="socialReason" required>
-      </mat-form-field>
-    </div>
-
-    <div class="conteniner_Datos">
-      <mat-form-field class="matIzquierdo">
-        <mat-label>Sector</mat-label>
-        <input matInput type="text" placeholder="sector" formControlName="sector" required >
-      </mat-form-field>
-      <mat-form-field class="example-full-width">
-        <mat-label>Legal Representative</mat-label>
-        <input matInput type="text" placeholder="legalRepresentative" formControlName="legalRepresentative" required>
-      </mat-form-field>
-    </div>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Description</mat-label>
-      <textarea matInput type="text" placeholder="description" formControlName="description" required></textarea>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width">
-      <mat-label>Username</mat-label>
-      <input matInput type="text" placeholder="username" formControlName="username" required>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width" style="color: black">
-      <mat-label>New Password</mat-label>
-      <input matInput [type]="hide() ? 'password' : 'text'" placeholder="newPassword" formControlName="newPassword" required/>
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="clickEvent($event)"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hide()"
-      >
-        <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
-
-    <mat-form-field class="example-full-width" style="color: black">
-      <mat-label>Current Password</mat-label>
-      <input matInput [type]="hideNewPassword() ? 'password' : 'text'" placeholder="password" formControlName="password" required/>
-      <button
-        mat-icon-button
-        matSuffix
-        (click)="clickEventNewPassword($event)"
-        [attr.aria-label]="'Hide password'"
-        [attr.aria-pressed]="hideNewPassword()"
-      >
-        <mat-icon>{{hideNewPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
-
-    <button class="button" (click)="update()"  color="primary">Update</button>
-
-  </form>
-</div>
+<section class="ww ww-page ww-form-page ww-co-surface"><header class="ww-page-header"><h1 class="ww-page-title">Update Profile</h1></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando datos...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <form [formGroup]="updateProfileForm" autocomplete="off" class="ww-form ww-form-co" (ngSubmit)="update()" *ngIf="!isLoading && !loadError"><fieldset class="ww-lane">
+    <div class="ww-commit" [class.is-done]="updateProfileForm.get('ruc')?.valid && updateProfileForm.get('socialReason')?.valid"><h2 class="ww-commit-title">Company</h2><div class="ww-row"><label class="ww-field"><span class="ww-label">RUC</span><input class="ww-input" type="text" placeholder="ruc" formControlName="ruc" required maxlength="11"></label><label class="ww-field"><span class="ww-label">Social Reason</span><input class="ww-input" type="text" placeholder="socialReason" formControlName="socialReason" required></label></div></div>
+    <div class="ww-commit" [class.is-done]="updateProfileForm.get('sector')?.valid && updateProfileForm.get('legalRepresentative')?.valid"><h2 class="ww-commit-title">Representation</h2><div class="ww-row"><label class="ww-field"><span class="ww-label">Sector</span><input class="ww-input" type="text" placeholder="sector" formControlName="sector" required></label><label class="ww-field"><span class="ww-label">Legal Representative</span><input class="ww-input" type="text" placeholder="legalRepresentative" formControlName="legalRepresentative" required></label></div></div>
+    <div class="ww-commit" [class.is-done]="updateProfileForm.get('description')?.valid && updateProfileForm.get('username')?.valid"><h2 class="ww-commit-title">Profile</h2><label class="ww-field"><span class="ww-label">Description</span><textarea class="ww-input" placeholder="description" formControlName="description" required></textarea></label><label class="ww-field"><span class="ww-label">Username</span><input class="ww-input" type="text" placeholder="username" formControlName="username" required></label></div>
+    <div class="ww-commit" [class.is-done]="updateProfileForm.get('newPassword')?.valid && updateProfileForm.get('password')?.valid"><h2 class="ww-commit-title">Passwords</h2><label class="ww-field"><span class="ww-label">New Password</span><span class="ww-password"><input class="ww-input" [type]="hide() ? 'password' : 'text'" placeholder="newPassword" formControlName="newPassword" required><button class="ww-reveal" type="button" (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()"><span aria-hidden="true">◉</span></button></span></label><label class="ww-field"><span class="ww-label">Current Password</span><span class="ww-password"><input class="ww-input" [type]="hideNewPassword() ? 'password' : 'text'" placeholder="password" formControlName="password" required><button class="ww-reveal" type="button" (click)="clickEventNewPassword($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideNewPassword()"><span aria-hidden="true">◉</span></button></span></label></div>
+  </fieldset><div class="ww-form-actions"><button class="ww-button ww-button-co" type="submit">Update</button></div></form>
+</section>

@@ -1,4 +1,816 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: var(--ww-font-display); }
+
+/* === WebWorks: mundo publico (commit graph) === */
+:root {
+  --ww-ground: #E6EAEE;
+  --ww-ground-deep: #D6DCE2;
+  --ww-ink: #0B1220;
+  --ww-ink-soft: #3C4758;
+  --ww-dev: #00A676;
+  --ww-dev-ink: #00734F;
+  --ww-co: #3D3BF3;
+  --ww-co-deep: #2826C4;
+  --ww-merge: #FF5A1F;
+  --ww-error: #B42318;
+  --ww-line: 3px;
+  --ww-font-display: 'Bricolage Grotesque Variable', 'Segoe UI', sans-serif;
+  --ww-font-mono: 'Martian Mono Variable', ui-monospace, monospace;
+  --ww-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ww-gutter: clamp(16px, 4vw, 56px);
+}
+
+.ww {
+  font-family: var(--ww-font-display);
+  color: var(--ww-ink);
+  background: var(--ww-ground);
+  -webkit-font-smoothing: antialiased;
+}
+
+.ww ::selection {
+  background: var(--ww-dev);
+  color: var(--ww-ink);
+}
+
+.ww.company-shell ::selection {
+  background: var(--ww-co);
+  color: #fff;
+}
+
+.ww :focus-visible {
+  outline: var(--ww-line) solid var(--ww-ink);
+  outline-offset: 3px;
+}
+
+/* superficies del navegador en las rutas publicas */
+html:has(.ww) {
+  background: var(--ww-ground);
+  scrollbar-color: var(--ww-ink-soft) var(--ww-ground-deep);
+}
+
+/* === formularios publicos: el formulario es un carril y cada grupo de campos un commit === */
+.ww .ww-lane {
+  --role: var(--ww-ink);
+  position: relative;
+  display: grid;
+  gap: 28px;
+  margin: 0;
+  padding: 0 0 0 44px;
+  border: 0;
+}
+
+.ww .ww-lane::before {
+  content: '';
+  position: absolute;
+  left: calc(8px - var(--ww-line) / 2);
+  top: 6px;
+  bottom: 6px;
+  width: var(--ww-line);
+  background: var(--role);
+}
+
+.ww .ww-commit {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.ww .ww-commit::before {
+  content: '';
+  position: absolute;
+  left: -43px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: var(--ww-line) solid var(--role);
+  background: var(--ww-ground);
+  transition: background-color 260ms var(--ww-ease-out);
+}
+
+.ww .ww-commit.is-done::before {
+  background: var(--role);
+}
+
+.ww .ww-commit-title {
+  margin: 0;
+  padding: 0;
+  font-size: 1.3125rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+/* el legend de un grupo no participa del grid del fieldset: separarlo a mano */
+.ww legend.ww-commit-title {
+  float: left;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.ww legend.ww-commit-title ~ * {
+  clear: both;
+}
+
+.ww .ww-row {
+  display: grid;
+  align-items: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.ww .ww-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.ww .ww-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ww-ink);
+}
+
+.ww .ww-input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 48px;
+  padding: 10px 2px;
+  font: inherit;
+  font-size: 1.0625rem;
+  color: var(--ww-ink);
+  background: transparent;
+  border: 0;
+  border-bottom: var(--ww-line) solid var(--ww-ink-soft);
+  border-radius: 0;
+  caret-color: var(--role-ink, var(--ww-ink));
+  transition: border-color 200ms var(--ww-ease-out), background-color 200ms var(--ww-ease-out);
+}
+
+.ww textarea.ww-input {
+  min-height: 96px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.ww .ww-input::placeholder {
+  color: var(--ww-ink-soft);
+  opacity: 1;
+}
+
+.ww .ww-input:hover {
+  border-bottom-color: var(--ww-ink);
+}
+
+.ww .ww-input:focus-visible {
+  outline: none;
+  border-bottom-color: var(--role-ink, var(--ww-ink));
+  background: var(--ww-ground-deep);
+}
+
+.ww .ww-input.is-invalid {
+  border-bottom-color: var(--ww-error);
+}
+
+.ww .ww-hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ww-ink-soft);
+}
+
+.ww .ww-field-error {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ww-error);
+}
+
+.ww .ww-password {
+  position: relative;
+}
+
+.ww .ww-password .ww-input {
+  padding-right: 52px;
+}
+
+.ww .ww-reveal {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--ww-ink-soft);
+  background: none;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.ww .ww-reveal:hover {
+  color: var(--ww-ink);
+}
+
+.ww .ww-reveal svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ww .ww-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 26px;
+  font: inherit;
+  font-size: 1.0625rem;
+  font-weight: 650;
+  color: var(--ww-ground);
+  background: var(--ww-ink);
+  border: var(--ww-line) solid var(--ww-ink);
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out), border-color 220ms var(--ww-ease-out);
+}
+
+.ww .ww-button:not(:disabled):hover {
+  background: transparent;
+  color: var(--ww-ink);
+}
+
+.ww .ww-button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.ww .ww-button:disabled {
+  cursor: progress;
+  opacity: 0.6;
+}
+
+.ww .ww-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ww .ww-alert {
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ww-error);
+  border: var(--ww-line) solid var(--ww-error);
+}
+
+/* === superficies internas: paginas, registros, tablas y perfiles === */
+.ww-page {
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: clamp(28px, 5vh, 56px) clamp(16px, 3.5vw, 48px) 64px;
+  overflow-wrap: anywhere;
+}
+
+.ww-page-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: var(--ww-line) solid var(--ww-ink);
+}
+
+.ww-page-title {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.6vw, 4.25rem);
+  font-weight: 750;
+  font-stretch: 92%;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.ww-page-subtitle {
+  max-width: 44ch;
+  margin: 8px 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--ww-ink-soft);
+}
+
+.ww-section {
+  padding: 32px 0;
+  border-top: var(--ww-line) solid var(--ww-ground-deep);
+}
+
+.ww-section:first-of-type {
+  border-top-color: var(--ww-ink);
+}
+
+.ww-section-title {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.ww-state {
+  margin: 0;
+  padding: 18px 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--ww-ink-soft);
+}
+
+.ww-state[role='alert'] {
+  color: var(--ww-error);
+}
+
+.ww-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.ww-button.ww-button-outline {
+  color: var(--ww-ink);
+  background: transparent;
+}
+
+.ww-button.ww-button-outline:not(:disabled):hover {
+  color: var(--ww-ground);
+  background: var(--ww-ink);
+}
+
+.ww-button.ww-button-dev {
+  color: var(--ww-ink);
+  background: var(--ww-dev);
+  border-color: var(--ww-dev);
+}
+
+.ww-button.ww-button-dev:not(:disabled):hover {
+  color: #fff;
+  background: var(--ww-dev-ink);
+  border-color: var(--ww-dev-ink);
+}
+
+.ww-button.ww-button-co {
+  color: #fff;
+  background: var(--ww-co);
+  border-color: var(--ww-co);
+}
+
+.ww-button.ww-button-co:not(:disabled):hover {
+  color: #fff;
+  background: var(--ww-co-deep);
+  border-color: var(--ww-co-deep);
+}
+
+.ww-button.ww-button-co:focus-visible,
+.ww-co-surface :focus-visible {
+  outline-color: var(--ww-co);
+}
+
+.ww-form-page {
+  max-width: 860px;
+}
+
+.ww-form {
+  display: grid;
+  gap: 36px;
+  max-width: 720px;
+}
+
+.ww-form .ww-lane {
+  --role: var(--ww-dev);
+  --role-ink: var(--ww-dev-ink);
+}
+
+.ww-form.ww-form-co .ww-lane {
+  --role: var(--ww-co);
+  --role-ink: var(--ww-co);
+}
+
+.ww-form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-left: 44px;
+}
+
+.ww-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font: inherit;
+}
+
+.ww-data-table th,
+.ww-data-table td {
+  padding: 16px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: var(--ww-line) solid var(--ww-ground-deep);
+}
+
+.ww-data-table th {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  border-bottom-color: var(--ww-ink);
+}
+
+.ww-data-table tbody tr:hover {
+  background: var(--ww-ground-deep);
+}
+
+.ww-table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ww-action {
+  min-height: 40px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  color: var(--ww-ink);
+  background: transparent;
+  border: var(--ww-line) solid var(--ww-ink);
+  border-radius: 999px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ww-action:hover {
+  color: var(--ww-ground);
+  background: var(--ww-ink);
+}
+
+.ww-action.role-dev {
+  border-color: var(--ww-dev-ink);
+}
+
+.ww-action.role-co {
+  color: var(--ww-co);
+  border-color: var(--ww-co);
+}
+
+.ww-action.role-co:hover {
+  color: #fff;
+  background: var(--ww-co);
+}
+
+.ww-log {
+  --role: var(--ww-dev);
+  position: relative;
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ww-log.ww-log-co {
+  --role: var(--ww-co);
+}
+
+.ww-log-item {
+  position: relative;
+  min-width: 0;
+  padding: 22px 0 22px 38px;
+  border-bottom: var(--ww-line) solid var(--ww-ground-deep);
+}
+
+.ww-log-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 28px;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border: var(--ww-line) solid var(--role);
+  border-radius: 50%;
+  background: var(--ww-ground);
+}
+
+.ww-log-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(7px - var(--ww-line) / 2);
+  top: 42px;
+  bottom: -28px;
+  width: var(--ww-line);
+  background: var(--role);
+}
+
+.ww-log-title {
+  margin: 0;
+  font-size: 1.1875rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.ww-log-meta {
+  margin: 6px 0 0;
+  font-size: 0.9375rem;
+  color: var(--ww-ink-soft);
+}
+
+.ww-log-body {
+  margin: 8px 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+}
+
+.ww-profile {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 36px;
+  padding-top: 28px;
+  border-top: var(--ww-line) solid var(--ww-ink);
+}
+
+.ww-profile img,
+.ww-photo-preview {
+  width: min(200px, 100%);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: var(--ww-line) solid var(--ww-ink);
+  border-radius: 0;
+}
+
+.ww-details {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.ww-details div {
+  display: grid;
+  grid-template-columns: minmax(130px, 0.4fr) minmax(0, 1fr);
+  gap: 18px;
+  padding: 14px 0;
+  border-bottom: var(--ww-line) solid var(--ww-ground-deep);
+}
+
+.ww-details dt {
+  font-size: 0.9375rem;
+  font-weight: 650;
+  color: var(--ww-ink-soft);
+}
+
+.ww-details dd {
+  margin: 0;
+  font-size: 1.0625rem;
+}
+
+.ww-filter {
+  max-width: 420px;
+  margin-bottom: 20px;
+}
+
+.ww-choice-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--ww-line) solid var(--ww-ink);
+}
+
+.ww-choice {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 18px 0;
+  border-bottom: var(--ww-line) solid var(--ww-ground-deep);
+}
+
+.ww-choice input {
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  accent-color: var(--role, var(--ww-dev));
+}
+
+.ww-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px 24px;
+  margin: 0;
+  padding: 20px 0;
+  border-top: var(--ww-line) solid var(--ww-ink);
+  border-bottom: var(--ww-line) solid var(--ww-ink);
+}
+
+.ww-summary dt,
+.ww-summary dd {
+  margin: 0;
+}
+
+.ww-summary dd {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .ww-page-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ww-profile {
+    grid-template-columns: 1fr;
+  }
+
+  .ww-data-table,
+  .ww-data-table thead,
+  .ww-data-table tbody,
+  .ww-data-table tr,
+  .ww-data-table th,
+  .ww-data-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .ww-data-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .ww-data-table tr {
+    padding: 14px 0;
+    border-bottom: var(--ww-line) solid var(--ww-ink);
+  }
+
+  .ww-data-table td {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.42fr) minmax(0, 1fr);
+    gap: 14px;
+    padding: 10px 0;
+    border: 0;
+  }
+
+  .ww-data-table td::before {
+    content: attr(data-label);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ww-ink-soft);
+  }
+}
+
+@media (max-width: 560px) {
+  .ww-form-actions {
+    padding-left: 0;
+  }
+
+  .ww-details div,
+  .ww-data-table td {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 560px) {
+  .ww .ww-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === paginas de acceso (login y registro) === */
+.ww.auth {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: start;
+  min-height: calc(100svh - 76px);
+  box-sizing: border-box;
+  padding: clamp(40px, 9vh, 104px) var(--ww-gutter) clamp(56px, 10vh, 120px);
+}
+
+.ww .auth-intro {
+  position: sticky;
+  top: 120px;
+}
+
+.ww .auth-title {
+  margin: 0;
+  font-size: clamp(2.125rem, 3.7vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.ww .auth-title .quiet {
+  display: block;
+  font-weight: 300;
+}
+
+.ww .auth-title .pressure {
+  display: block;
+  font-size: clamp(3.25rem, 7.2vw, 6.5rem);
+  font-weight: 800;
+  font-stretch: 88%;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.ww .auth-lede {
+  max-width: 36ch;
+  margin: 24px 0 0;
+  font-size: 1.1875rem;
+  line-height: 1.55;
+  color: var(--ww-ink-soft);
+}
+
+.ww .auth-form {
+  display: grid;
+  gap: 36px;
+  max-width: 560px;
+}
+
+.ww .auth-actions {
+  display: grid;
+  justify-items: start;
+  gap: 18px;
+  padding-left: 44px;
+}
+
+.ww .auth-switch {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ww-ink-soft);
+}
+
+.ww .auth-switch a {
+  color: var(--ww-ink);
+  font-weight: 650;
+  text-decoration-thickness: var(--ww-line);
+  text-underline-offset: 6px;
+}
+
+@media (max-width: 900px) {
+  .ww.auth {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    min-height: 0;
+  }
+
+  .ww .auth-intro {
+    position: static;
+  }
+}
+
+/* el carril se dibuja al entrar, como el historial de la pagina de inicio */
+@media (prefers-reduced-motion: no-preference) {
+  .ww .ww-lane::before {
+    transform-origin: top;
+    animation: ww-lane-draw 560ms var(--ww-ease-out) 120ms backwards;
+  }
+
+  .ww .ww-commit::before {
+    animation: ww-node-in 420ms var(--ww-ease-out) backwards;
+    animation-delay: calc(var(--ww-n, 0) * 150ms + 280ms);
+  }
+
+  .ww .ww-commit:nth-child(2) { --ww-n: 1; }
+  .ww .ww-commit:nth-child(3) { --ww-n: 2; }
+}
+
+@keyframes ww-lane-draw {
+  from { transform: scaleY(0); }
+}
+
+@keyframes ww-node-in {
+  from { transform: scale(0); opacity: 0; }
+}

@@ -1,83 +1,48 @@
-<div class="container" [formGroup]="cardForm">
-    <div class="card">
-        <div class="card-inner" [ngClass]="{'flip': isFlipped}">
-            <div class="front">
-                <img class="map-img" src="/assets/imagenes/map.png" alt="" >
-                <div class="row">
-                    <img src="/assets/imagenes/chip.png" width=60px  alt="" >
-                    <img src="/assets/imagenes/visa.png" width=60px  alt="">
-                </div>
-                <div class="row card-no">
-                    <p>{{cardForm.get('numberCard')!.value ? cardForm.get('numberCard')!.value.slice(0, 4) : ''}}</p>
-                    <p>{{cardForm.get('numberCard')!.value ? cardForm.get('numberCard')!.value.slice(4, 8):''}}</p>
-                    <p>{{cardForm.get('numberCard')!.value ? cardForm.get('numberCard')!.value.slice(8, 12):''}}</p>
-                    <p>{{cardForm.get('numberCard')!.value ? cardForm.get('numberCard')!.value.slice(12,16):''}}</p>
-                </div>
-                <div class="row card-holder">
-                    <p>CARD HPLDER</p>
-                    <p>VALID TILL</p>
-                </div>
-                <div class="row name">
-                    <p>{{nameUser}}</p>
-                    <p>{{cardForm.get('dateCard')!.value | date:'MM/yyyy'}}</p>
-                </div>
-            </div>
-            <div class="back">
-                <img class="map-img" src="/assets/imagenes/map.png" width="" height=""  alt="" >
-                <div class="bar"></div>
-                <div class="row card-cvv">
-                    <div>
-                        <img src="/assets/imagenes/pattern.png" width="" height="" alt="">
-                    </div>
-                    <p>{{cardForm.get('cvv')!.value }}</p>
-                </div>
-                <div class="row card-text">
-                    <p>this is a virtual card design using HTML and CSS. You can aslo design something like this.</p>
-                </div>
-                <div class="row signature">
-                    <p>CUSTOMER SIGNATURE</p>
-                    <img src="/assets/imagenes/visa.png"  width=80px height="" alt="">
-                </div>
-            </div>
+<section class="ww ww-page ww-form-page">
+  <header class="ww-page-header">
+    <div>
+      <h1 class="ww-page-title">Agregar Tarjeta</h1>
+    </div>
+  </header>
+
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando método de pago...</p>
+  <p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <section class="payment-preview" *ngIf="!isLoading && !loadError" aria-label="Vista previa de la tarjeta">
+    <p class="preview-number">{{cardForm.get('numberCard')!.value}}</p>
+    <dl><div><dt>CARD HPLDER</dt><dd>{{nameUser}}</dd></div><div><dt>VALID TILL</dt><dd>{{cardForm.get('dateCard')!.value | date:'MM/yyyy'}}</dd></div><div><dt>CVV</dt><dd>{{cardForm.get('cvv')!.value}}</dd></div></dl>
+  </section>
+  <form class="ww-form" [formGroup]="cardForm" (ngSubmit)="addOrUpdateCard()" *ngIf="!isLoading && !loadError">
+    <fieldset class="ww-lane">
+      <div class="ww-commit" [class.is-done]="cardForm.get('numberCard')?.valid">
+        <h2 class="ww-commit-title">Numero de Tarjeta</h2>
+        <label class="ww-field">
+          <span class="ww-label">Numero de Tarjeta</span>
+          <input class="ww-input" type="text" placeholder="numberCard" formControlName="numberCard" maxlength="16" required>
+        </label>
+      </div>
+
+      <div class="ww-commit" [class.is-done]="cardForm.get('cvv')?.valid && cardForm.get('dateCard')?.valid">
+        <h2 class="ww-commit-title">Datos de seguridad</h2>
+        <div class="ww-row">
+          <label class="ww-field">
+            <span class="ww-label">CVV</span>
+            <input class="ww-input" type="text" placeholder="cvv" formControlName="cvv" maxlength="3" required
+              (focus)="onCardFocus()" (blur)="onCardBlur()" (mouseover)="onCardMouseOver()" (mouseout)="onCardMouseOut()">
+          </label>
+          <label class="ww-field">
+            <span class="ww-label">Fecha de caducidad</span>
+            <input class="ww-input" type="date" formControlName="dateCard" required>
+            <span class="ww-hint">MM/YYYY</span>
+          </label>
         </div>
+      </div>
+    </fieldset>
+
+    <div class="ww-form-actions">
+      <button class="ww-button ww-button-dev" type="submit" *ngIf="!confirm">agregar método de pago</button>
+      <button class="ww-button ww-button-dev" type="submit" *ngIf="confirm">modificar método de pago</button>
+      <button class="ww-button ww-button-outline" type="button" (click)="deleteMethodPayment()" *ngIf="confirm">eliminar método de pago</button>
+      <a class="ww-button ww-button-outline" routerLink="/listMethodPayment" (click)="deleteIdMethodPayment()">ver métodos de pago</a>
     </div>
-
-    <div class="form-container" >
-        <form class="example-form">
-
-            <H1 class="titulo">Agregar Tarjeta</H1>
-
-            <mat-form-field class="example-full-width">
-                <mat-label>Numero de Tarjeta</mat-label>
-                <input matInput type="text" placeholder="numberCard" formControlName="numberCard" required
-                    maxlength="16">
-            </mat-form-field>
-
-            <div class="conteniner_Datos">
-                <mat-form-field class="matIzquierdo">
-                    <mat-label>CVV</mat-label>
-                    <input matInput class="cvv-input"  type="text" placeholder="cvv" formControlName="cvv"
-                        required maxlength="3"  (focus)="onCardFocus()" (blur)="onCardBlur()"
-                        (mouseover)="onCardMouseOver()" (mouseout)="onCardMouseOut()">
-                </mat-form-field>
-
-
-              <mat-form-field class="example-full-width">
-                <mat-label>Fecha de caducidad</mat-label>
-                <input matInput [matDatepicker]="picket" formControlName="dateCard"   required>
-                <mat-hint>MM/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picket"></mat-datepicker-toggle>
-                <mat-datepicker #picket></mat-datepicker>
-              </mat-form-field>
-
-            </div>
-
-            <button class="button" (click)="addOrUpdateCard()" *ngIf="!confirm" color="primary">Add Method Payment</button>
-            <button class="button" (click)="addOrUpdateCard()" *ngIf="confirm" color="primary">Update Method Payment </button>
-            <button class="button" (click)="deleteMethodPayment()" *ngIf="confirm" color="primary"  >Delete Method Payment </button>
-            <button class="button" routerLink="/listMethodPayment" (click)="deleteIdMethodPayment()" color="primary">See Payment</button>
-
-        </form>
-    </div>
-
-</div>
+  </form>
+</section>

@@ -1,48 +1,12 @@
-<div class="container">
-  <div class="containerForm">
-    <h1>List of Subscription</h1>
-
-    <table mat-table [dataSource]="dataSource" class="tableSubscription">
-
-      <ng-container matColumnDef="dateStart">
-        <th mat-header-cell *matHeaderCellDef> Date Start </th>
-        <td mat-cell *matCellDef="let element"> {{element.dateStart | date:'dd/MM/yyyy HH:mm'}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="dateEnd">
-        <th mat-header-cell *matHeaderCellDef> Date End </th>
-        <td mat-cell *matCellDef="let element"> {{element.dateEnd | date:'dd/MM/yyyy HH:mm'}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="amountTotal">
-        <th mat-header-cell *matHeaderCellDef> Amount Total </th>
-        <td mat-cell *matCellDef="let element"> {{element.amountTotal}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="namePlan">
-        <th mat-header-cell *matHeaderCellDef>Plan</th>
-        <td mat-cell *matCellDef="let element"> {{element.namePlan}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="numberMethodPayment">
-        <th mat-header-cell *matHeaderCellDef>Method Payment</th>
-        <td mat-cell *matCellDef="let element"> {{element.numberMethodPayment || "null"}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="namePromotionCode">
-        <th mat-header-cell *matHeaderCellDef>Promotion Code</th>
-        <td mat-cell *matCellDef="let element"> {{element.namePromotionCode || "null"}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="discountPercentage">
-        <th mat-header-cell *matHeaderCellDef>Percentage</th>
-        <td mat-cell *matCellDef="let element"> {{(element.discountPercentage | percent:'1.0-2'  )|| "null"}} </td>
-      </ng-container>
-
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-  </div>
-</div>
+<section class="ww ww-page">
+  <header class="ww-page-header"><h1 class="ww-page-title">List of Subscription</h1></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando suscripciones...</p>
+  <p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <p class="ww-state" *ngIf="!isLoading && !loadError && dataSource.data.length === 0">No hay suscripciones registradas.</p>
+  <table class="ww-data-table" *ngIf="!isLoading && !loadError && dataSource.data.length > 0">
+    <thead><tr><th>Date Start</th><th>Date End</th><th>Amount Total</th><th>Plan</th><th>Method Payment</th><th>Promotion Code</th><th>Percentage</th></tr></thead>
+    <tbody><tr *ngFor="let element of dataSource.data">
+      <td data-label="Date Start">{{element.dateStart | date:'dd/MM/yyyy HH:mm'}}</td><td data-label="Date End">{{element.dateEnd | date:'dd/MM/yyyy HH:mm'}}</td><td data-label="Amount Total">{{element.amountTotal}}</td><td data-label="Plan">{{element.namePlan}}</td><td data-label="Method Payment">{{element.numberMethodPayment || "null"}}</td><td data-label="Promotion Code">{{element.namePromotionCode || "null"}}</td><td data-label="Percentage">{{(element.discountPercentage | percent:'1.0-2') || "null"}}</td>
+    </tr></tbody>
+  </table>
+</section>

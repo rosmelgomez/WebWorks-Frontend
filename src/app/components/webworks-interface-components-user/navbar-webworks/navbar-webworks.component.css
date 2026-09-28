@@ -1,50 +1,202 @@
-.container {
+:host {
+  display: block;
+  height: 100%;
+}
+
+.rail {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  box-sizing: border-box;
+  height: 100vh;
+  padding: 28px 24px 28px 28px;
+  border-right: var(--ww-line) solid var(--ww-ink);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ww-ink);
+  text-decoration: none;
+  font-size: 1.25rem;
+  font-weight: 750;
+  font-stretch: 90%;
+  letter-spacing: -0.02em;
+}
+
+.brand-mark {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  fill: none;
+  stroke-width: var(--ww-line);
+  stroke-linecap: round;
+}
+
+.brand-mark .lane-dev { stroke: var(--ww-dev); }
+.brand-mark .lane-co { stroke: var(--ww-co); }
+.brand-mark .node { fill: var(--ww-ink); stroke: none; }
+
+/* la navegacion es el carril verde del developer */
+.lane ul {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lane ul::before {
+  content: '';
+  position: absolute;
+  left: calc(7px - var(--ww-line) / 2);
+  top: 22px;
+  bottom: 22px;
+  width: var(--ww-line);
+  background: var(--ww-dev);
+}
+
+.stop {
+  position: relative;
   display: flex;
   align-items: center;
-  flex-direction:column;
-  min-height: 100%;
-  width: 100%;
-  background-color: #005F6B;
+  min-height: 44px;
+  padding-left: 34px;
+  font-size: 1.0625rem;
+  font-weight: 500;
+  color: var(--ww-ink);
+  text-decoration: none;
+  text-decoration-thickness: var(--ww-line);
+  text-underline-offset: 7px;
 }
-/*contenido inicio*/
-.contenidoInicio {
-  font-size: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items:center ;
-  color: white;
+
+.stop::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: var(--ww-line) solid var(--ww-dev);
+  background: var(--ww-ground);
+  transition: background-color 220ms var(--ww-ease-out);
+}
+
+.stop:hover {
+  text-decoration-line: underline;
+  text-decoration-color: var(--ww-dev);
+}
+
+.stop.is-active {
+  font-weight: 700;
+}
+
+.stop.is-active::before {
+  background: var(--ww-dev);
+}
+
+.stop:focus-visible {
+  outline-color: var(--ww-dev-ink);
+}
+
+.logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  align-self: flex-start;
+  min-height: 44px;
+  padding: 0 18px;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ww-ink);
+  background: transparent;
+  border: var(--ww-line) solid var(--ww-ink);
+  border-radius: 999px;
   cursor: pointer;
-  margin: 20px 0 20px 0;
-}
-/*contenido butones*/
-
-.containerButton{
-  font-size: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items:center ;
-  color: white;
-  cursor: pointer;
+  transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out);
 }
 
-
-.iconContainer{
-  display: flex;
-  flex-direction: row;
-  align-items:center ;
-  color:white;
-
+.logout:hover {
+  background: var(--ww-ink);
+  color: var(--ww-ground);
 }
 
-.icono{
-  padding: 1rem;
-  color: white;
+.logout svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-@media only screen and (max-width: 800px) {
+/* en movil el carril se vuelve horizontal arriba del contenido */
+@media (max-width: 800px) {
+  .rail {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 20px;
+    padding: 14px 16px;
+    border-right: 0;
+    border-bottom: var(--ww-line) solid var(--ww-ink);
+  }
 
-  .textoNombre{
+  .brand-name {
     display: none;
   }
-}
 
+  .lane {
+    order: 3;
+    flex-basis: 100%;
+  }
+
+  .lane ul {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    gap: 0;
+  }
+
+  .lane ul::before {
+    left: 12%;
+    right: 12%;
+    top: 7px;
+    bottom: auto;
+    width: auto;
+    height: var(--ww-line);
+  }
+
+  .stop {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 6px;
+    min-height: 48px;
+    padding: 22px 0 0;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .stop::before {
+    left: 50%;
+    top: 0;
+    margin: 0 0 0 -7px;
+  }
+
+  .logout {
+    margin: 0 0 0 auto;
+    min-height: 40px;
+    padding: 0 14px;
+  }
+}

@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T00:00:00Z",
+  "title": "Design System: WebWorks",
+  "extensions": {
+    "scope": "Public surfaces (.ww scope: /pageInicio landing, public navbar and footer, /login, /registrar, /listPlanInicio, /listPlanUser) and the developer shell (sidebar lane plus the /pageUser dashboard). Other logged-in developer screens and the whole company area remain Angular Material indigo-pink with Roboto; known boundary, not part of this system.",
+    "cssCustomProperties": {
+      "ground": "--ww-ground",
+      "ground-deep": "--ww-ground-deep",
+      "ink": "--ww-ink",
+      "ink-soft": "--ww-ink-soft",
+      "dev": "--ww-dev",
+      "dev-ink": "--ww-dev-ink",
+      "co": "--ww-co",
+      "merge": "--ww-merge",
+      "line": "--ww-line",
+      "font-display": "--ww-font-display",
+      "font-mono": "--ww-font-mono",
+      "ease-out": "--ww-ease-out",
+      "gutter": "--ww-gutter",
+      "co-deep": "--ww-co-deep",
+      "error": "--ww-error"
+    },
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Concrete Ground",
+        "canonical": "#E6EAEE",
+        "tonalRamp": [
+          "#1E2226",
+          "#353B41",
+          "#4F565E",
+          "#6B737C",
+          "#8A929B",
+          "#AAB2BA",
+          "#D6DCE2",
+          "#F2F4F6"
+        ]
+      },
+      "ground-deep": {
+        "role": "neutral",
+        "displayName": "Deep Concrete",
+        "canonical": "#D6DCE2",
+        "tonalRamp": [
+          "#1D2228",
+          "#333A42",
+          "#4C555F",
+          "#68727D",
+          "#87919C",
+          "#A8B1BA",
+          "#D6DCE2",
+          "#EEF1F4"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Graph Ink",
+        "canonical": "#0B1220",
+        "tonalRamp": [
+          "#0B1220",
+          "#1C2433",
+          "#2F3848",
+          "#454F60",
+          "#5E687A",
+          "#7A8494",
+          "#A3AAB6",
+          "#D3D7DE"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ink",
+        "canonical": "#3C4758",
+        "tonalRamp": [
+          "#141A24",
+          "#252D3A",
+          "#3C4758",
+          "#56627A",
+          "#737E92",
+          "#949DAE",
+          "#B9C0CC",
+          "#E0E4EA"
+        ]
+      },
+      "on-ink-soft": {
+        "role": "neutral",
+        "displayName": "Soft Ground on Ink",
+        "canonical": "#B9C2CE",
+        "tonalRamp": [
+          "#1B2027",
+          "#323A45",
+          "#4D5664",
+          "#6A7482",
+          "#8993A1",
+          "#A9B2BE",
+          "#B9C2CE",
+          "#E4E8ED"
+        ]
+      },
+      "dev": {
+        "role": "primary",
+        "displayName": "Branch Green",
+        "canonical": "#00A676",
+        "tonalRamp": [
+          "#002A1C",
+          "#00432E",
+          "#005E41",
+          "#00734F",
+          "#00A676",
+          "#3FC596",
+          "#8BDDBD",
+          "#D2F3E5"
+        ]
+      },
+      "dev-ink": {
+        "role": "primary",
+        "displayName": "Deep Branch Green",
+        "canonical": "#00734F",
+        "tonalRamp": [
+          "#002A1C",
+          "#00432E",
+          "#005E41",
+          "#00734F",
+          "#00A676",
+          "#3FC596",
+          "#8BDDBD",
+          "#D2F3E5"
+        ]
+      },
+      "co": {
+        "role": "secondary",
+        "displayName": "Signal Indigo",
+        "canonical": "#3D3BF3",
+        "tonalRamp": [
+          "#0D0C4A",
+          "#18167A",
+          "#2826C4",
+          "#3D3BF3",
+          "#6563F6",
+          "#8E8DF8",
+          "#BBBAFB",
+          "#E5E5FE"
+        ]
+      },
+      "co-deep": {
+        "role": "secondary",
+        "displayName": "Deep Indigo",
+        "canonical": "#2826C4",
+        "tonalRamp": [
+          "#0D0C4A",
+          "#18167A",
+          "#2826C4",
+          "#3D3BF3",
+          "#6563F6",
+          "#8E8DF8",
+          "#BBBAFB",
+          "#E5E5FE"
+        ]
+      },
+      "merge": {
+        "role": "tertiary",
+        "displayName": "Merge Vermillion",
+        "canonical": "#FF5A1F",
+        "tonalRamp": [
+          "#3D1003",
+          "#6B1F07",
+          "#A1310B",
+          "#D44612",
+          "#FF5A1F",
+          "#FF8659",
+          "#FFB597",
+          "#FFE3D8"
+        ]
+      },
+      "on-role": {
+        "role": "neutral",
+        "displayName": "Role White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#1A1A1A",
+          "#3A3A3A",
+          "#5C5C5C",
+          "#808080",
+          "#A3A3A3",
+          "#C7C7C7",
+          "#E8E8E8",
+          "#FFFFFF"
+        ]
+      },
+      "error": {
+        "role": "status",
+        "displayName": "Error Red",
+        "canonical": "#B42318",
+        "tonalRamp": [
+          "#3A0B07",
+          "#5E120C",
+          "#8A1A11",
+          "#B42318",
+          "#D9453A",
+          "#E97A71",
+          "#F4B2AC",
+          "#FCE4E2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display (pressure word)",
+        "purpose": "The single word under pressure in the hero; one per page. Condensed via font-stretch 88%."
+      },
+      "display-quiet": {
+        "displayName": "Display Quiet",
+        "purpose": "Light 300 run-in line before the pressure word; light register of the plan band title."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles, max 16ch, font-stretch 92%. Closing door names use it at 800 / 88% width."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Lane titles in the role's text color."
+      },
+      "title-sm": {
+        "displayName": "Title Small",
+        "purpose": "Step titles in lane lists."
+      },
+      "body-lg": {
+        "displayName": "Body Large",
+        "purpose": "Section ledes and plan copy, 50-52ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Step details, 44ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Door, CTA, and pill-link labels."
+      },
+      "mono": {
+        "displayName": "Mono (terminal voice)",
+        "purpose": "Commit hashes and commit messages only; 0.75rem under 720px."
+      },
+      "pressure": {
+        "displayName": "Pressure (interior)",
+        "purpose": "Pressure word on /login, /registrar and the plans pages, under a Display Quiet run-in; one per page."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Numbers that are the content: usage meters 3.25rem (2.75rem under 560px), plan prices clamp(2.25rem, 3.6vw, 3.25rem), plan limits 2rem in Deep Branch Green. Tabular numbers."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Field labels (600), plan limit terms, dates and counts under list items, the plans disclaimer."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Input hints and field errors (600); sidebar labels on mobile."
+      }
+    },
+    "line": {
+      "name": "ww-line",
+      "value": "3px",
+      "purpose": "The single stroke weight: lanes, curves, node rings, dividers, pill borders, underlines, focus outlines."
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ww-ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing in the world; all state changes and entrances."
+      },
+      {
+        "name": "state-fast",
+        "value": "200ms",
+        "purpose": "Navbar CTA fill inversion."
+      },
+      {
+        "name": "state",
+        "value": "220ms",
+        "purpose": "Door and pill-link fill changes, arrow nudge (translateX 4px)."
+      },
+      {
+        "name": "state-slow",
+        "value": "260ms",
+        "purpose": "Lane dim to 0.22 opacity on door focus; closing door brightness 1.06."
+      },
+      {
+        "name": "replay-stagger",
+        "value": "150ms",
+        "purpose": "Per-row delay of the commit graph replay on load; lanes 520ms scaleY, curves 640ms clip reveal, nodes 420ms scale-in, messages 520ms blur-fade."
+      },
+      {
+        "name": "merge-ring",
+        "value": "1400ms",
+        "purpose": "One-shot vermillion ring from the merge node to an 18px offset; plays once, last."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: no-preference",
+        "purpose": "All entrance choreography is gated behind this query."
+      },
+      {
+        "name": "form-lane",
+        "value": "560ms",
+        "purpose": "Form and dashboard lanes draw on entry (scaleY/scaleX); nodes scale in 420ms with a 150ms stagger; gated by reduced motion."
+      }
+    ],
+    "focus": [
+      {
+        "name": "default",
+        "value": "outline: 3px solid var(--ww-ink); outline-offset: 3px",
+        "purpose": "Every focusable element inside .ww."
+      },
+      {
+        "name": "role",
+        "value": "outline-color: var(--ww-dev-ink) | var(--ww-co)",
+        "purpose": "Developer and company doors keep their role color in focus."
+      },
+      {
+        "name": "on-ink",
+        "value": "outline-color: var(--ww-dev)",
+        "purpose": "Focus inside the ink plan band."
+      },
+      {
+        "name": "panel-inset",
+        "value": "outline-offset: -8px; ink on green, white on indigo",
+        "purpose": "Full-bleed closing door panels."
+      },
+      {
+        "name": "role-ink",
+        "value": "outline-color: var(--role-ink); input focus underline var(--role-ink) on Deep Concrete fill",
+        "purpose": "Form fields, submit buttons, sidebar stops and dashboard rows inside role-colored surfaces."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "hero-stack",
+        "value": "1080px",
+        "purpose": "Hero becomes one column; graph max-width 560px."
+      },
+      {
+        "name": "nav-collapse",
+        "value": "860px",
+        "purpose": "Navbar links collapse behind the pill menu toggle."
+      },
+      {
+        "name": "mobile",
+        "value": "720px",
+        "purpose": "Lanes, closing doors, and footer stack; join fork hidden; mono 0.75rem; doors 48px."
+      },
+      {
+        "name": "dash-stack",
+        "value": "1100px",
+        "purpose": "Dashboard grid becomes one column; side column gets a 3px ink top rule."
+      },
+      {
+        "name": "auth-stack",
+        "value": "900px",
+        "purpose": "Auth and plans heads stack; auth intro no longer sticky."
+      },
+      {
+        "name": "sidebar-horizontal",
+        "value": "800px",
+        "purpose": "Developer sidebar becomes a horizontal lane above the content."
+      },
+      {
+        "name": "plans-stack",
+        "value": "620px",
+        "purpose": "Plan columns stack with 3px ink top rules."
+      },
+      {
+        "name": "fields-stack",
+        "value": "560px",
+        "purpose": "Paired form fields and the two usage meters stack."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Developer Door",
+      "kind": "button",
+      "refersTo": "button-dev",
+      "description": "Role pill that opens registration as a developer; its hover highlights the green lane.",
+      "html": "<a class=\"ds-door ds-door-dev\" href=\"#\">Soy developer <svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M4 10 H15 M10 5 L15 10 L10 15\"/></svg></a>",
+      "css": ".ds-door { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 20px; font-family: var(--ww-font-display); font-size: 1.0625rem; font-weight: 650; text-decoration: none; border: var(--ww-line) solid currentColor; border-radius: 999px; transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out); } .ds-door svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 220ms var(--ww-ease-out); } .ds-door:hover svg { transform: translateX(4px); } .ds-door:active { transform: translateY(1px); } .ds-door-dev { background: var(--ww-dev); border-color: var(--ww-dev); color: var(--ww-ink); } .ds-door-dev:hover { background: var(--ww-dev-ink); border-color: var(--ww-dev-ink); color: #fff; } .ds-door-dev:focus-visible { outline: var(--ww-line) solid var(--ww-dev-ink); outline-offset: 3px; }"
+    },
+    {
+      "name": "Company Door",
+      "kind": "button",
+      "refersTo": "button-co",
+      "description": "Role pill that opens registration as a company; its hover highlights the indigo lane.",
+      "html": "<a class=\"ds-door ds-door-co\" href=\"#\">Soy empresa <svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M4 10 H15 M10 5 L15 10 L10 15\"/></svg></a>",
+      "css": ".ds-door { display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 20px; font-family: var(--ww-font-display); font-size: 1.0625rem; font-weight: 650; text-decoration: none; border: var(--ww-line) solid currentColor; border-radius: 999px; transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out); } .ds-door svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 220ms var(--ww-ease-out); } .ds-door:hover svg { transform: translateX(4px); } .ds-door:active { transform: translateY(1px); } .ds-door-co { background: var(--ww-co); border-color: var(--ww-co); color: #fff; } .ds-door-co:hover { background: #2826C4; border-color: #2826C4; } .ds-door-co:focus-visible { outline: var(--ww-line) solid var(--ww-co); outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Pill (Crear cuenta)",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Neutral call to action on the ground; inverts to ink on hover.",
+      "html": "<a class=\"ds-pill\" href=\"#\">Crear cuenta</a>",
+      "css": ".ds-pill { display: inline-block; padding: 11px 20px; font-family: var(--ww-font-display); font-size: 1rem; font-weight: 650; color: var(--ww-ink); background: transparent; border: var(--ww-line) solid var(--ww-ink); border-radius: 999px; text-decoration: none; transition: background-color 200ms var(--ww-ease-out), color 200ms var(--ww-ease-out); } .ds-pill:hover { background: var(--ww-ink); color: var(--ww-ground); } .ds-pill:active { transform: translateY(1px); } .ds-pill:focus-visible { outline: var(--ww-line) solid var(--ww-ink); outline-offset: 3px; }"
+    },
+    {
+      "name": "Outline Pill on Ink (Ver planes)",
+      "kind": "button",
+      "refersTo": "button-outline-on-ink",
+      "description": "Pill link inside the ink band; inverts to ground on hover, focuses in green.",
+      "html": "<div class=\"ds-band\"><a class=\"ds-pill-ink\" href=\"#\">Ver planes <svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M4 10 H15 M10 5 L15 10 L10 15\"/></svg></a></div>",
+      "css": ".ds-band { background: var(--ww-ink); padding: 32px; } .ds-pill-ink { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; font-family: var(--ww-font-display); font-size: 1.0625rem; font-weight: 650; color: var(--ww-ground); text-decoration: none; border: var(--ww-line) solid var(--ww-ground); border-radius: 999px; transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out); } .ds-pill-ink svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; transition: transform 220ms var(--ww-ease-out); } .ds-pill-ink:hover { background: var(--ww-ground); color: var(--ww-ink); } .ds-pill-ink:hover svg { transform: translateX(4px); } .ds-pill-ink:focus-visible { outline: var(--ww-line) solid var(--ww-dev); outline-offset: 3px; }"
+    },
+    {
+      "name": "Public Navbar",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Sticky header with the two-lane brand mark, underline-on-hover links, and the outline CTA; 3px ink bottom rule.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\"><svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><path class=\"d\" d=\"M8 3 V14 C8 21 16 21 16 27\"/><path class=\"c\" d=\"M24 3 V14 C24 21 16 21 16 27\"/><circle cx=\"16\" cy=\"27\" r=\"4\"/></svg><span>WebWorks</span></a><nav class=\"ds-links\"><a class=\"ds-link\" href=\"#\">Cómo funciona</a><a class=\"ds-link is-active\" href=\"#\">Planes</a><a class=\"ds-link\" href=\"#\">Iniciar sesión</a><a class=\"ds-cta\" href=\"#\">Crear cuenta</a></nav></header>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 24px; padding: 14px var(--ww-gutter); background: var(--ww-ground); border-bottom: var(--ww-line) solid var(--ww-ink); font-family: var(--ww-font-display); } .ds-brand { display: inline-flex; align-items: center; gap: 10px; margin-right: auto; color: var(--ww-ink); text-decoration: none; font-size: 1.375rem; font-weight: 750; font-stretch: 90%; letter-spacing: -0.02em; } .ds-brand svg { width: 32px; height: 32px; fill: none; stroke-width: var(--ww-line); stroke-linecap: round; } .ds-brand .d { stroke: var(--ww-dev); } .ds-brand .c { stroke: var(--ww-co); } .ds-brand circle { fill: var(--ww-ink); stroke: none; } .ds-links { display: flex; align-items: center; gap: 6px; } .ds-link { font-size: 1rem; font-weight: 500; color: var(--ww-ink); padding: 10px 14px; text-decoration: none; text-decoration-thickness: var(--ww-line); text-underline-offset: 8px; } .ds-link:hover, .ds-link.is-active { text-decoration-line: underline; } .ds-link:focus-visible, .ds-cta:focus-visible { outline: var(--ww-line) solid var(--ww-ink); outline-offset: 3px; } .ds-cta { margin-left: 10px; padding: 11px 20px; font-size: 1rem; font-weight: 650; color: var(--ww-ink); border: var(--ww-line) solid var(--ww-ink); border-radius: 999px; text-decoration: none; transition: background-color 200ms var(--ww-ease-out), color 200ms var(--ww-ease-out); } .ds-cta:hover { background: var(--ww-ink); color: var(--ww-ground); }"
+    },
+    {
+      "name": "Commit Graph",
+      "kind": "custom",
+      "refersTo": "commit-node",
+      "description": "Signature: two 3px lanes with hollow ring nodes and mono commit rows, forking into the vermillion merge node.",
+      "html": "<ol class=\"ds-graph\"><li class=\"ds-row\"><span class=\"ds-node ds-node-dev\"></span><span class=\"ds-msg ds-msg-dev\"><span class=\"ds-hash\">a3f9c1</span>perfil de developer</span><span class=\"ds-msg ds-msg-co\"><span class=\"ds-hash\">7be2d0</span>empresa registrada</span><span class=\"ds-node ds-node-co\"></span></li><li class=\"ds-row\"><span class=\"ds-node ds-node-dev\"></span><span class=\"ds-msg ds-msg-dev\"><span class=\"ds-hash\">e41b8a</span>repositorio tienda-angular</span></li><li class=\"ds-merge\"><svg viewBox=\"0 0 100 100\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path class=\"d\" d=\"M0 0 C0 60 50 40 50 100\"/><path class=\"c\" d=\"M100 0 C100 60 50 40 50 100\"/></svg><span class=\"ds-merge-node\"></span><span class=\"ds-msg ds-msg-merge\"><span class=\"ds-hash\">b8e05a</span>postulación aceptada</span></li></ol>",
+      "css": ".ds-graph { --lane-x: 22px; --node: 14px; list-style: none; margin: 0; padding: 0; max-width: 480px; background: var(--ww-ground); } .ds-row { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 60px; } .ds-row::before, .ds-row::after { content: ''; position: absolute; top: 0; bottom: 0; width: var(--ww-line); } .ds-row::before { left: calc(var(--lane-x) - var(--ww-line) / 2); background: var(--ww-dev); } .ds-row::after { right: calc(var(--lane-x) - var(--ww-line) / 2); background: var(--ww-co); } .ds-node { position: absolute; top: 50%; width: var(--node); height: var(--node); margin-top: calc(var(--node) / -2); border-radius: 50%; background: var(--ww-ground); border: var(--ww-line) solid; box-sizing: border-box; z-index: 1; } .ds-node-dev { left: calc(var(--lane-x) - var(--node) / 2); border-color: var(--ww-dev); } .ds-node-co { right: calc(var(--lane-x) - var(--node) / 2); border-color: var(--ww-co); } .ds-msg { font-family: var(--ww-font-mono); font-size: 0.875rem; line-height: 1.35; color: var(--ww-ink); } .ds-hash { margin-right: 0.6em; color: var(--ww-ink-soft); } .ds-msg-dev { padding-left: calc(var(--lane-x) + 22px); margin-right: auto; max-width: 46%; } .ds-msg-co { padding-right: calc(var(--lane-x) + 22px); margin-left: auto; text-align: right; max-width: 46%; } .ds-merge { position: relative; display: flex; flex-direction: column; align-items: center; } .ds-merge svg { display: block; width: calc(100% - 44px); height: 77px; overflow: visible; fill: none; stroke-width: var(--ww-line); } .ds-merge path { vector-effect: non-scaling-stroke; } .ds-merge .d { stroke: var(--ww-dev); } .ds-merge .c { stroke: var(--ww-co); } .ds-merge-node { width: 26px; height: 26px; margin-top: -13px; border-radius: 50%; background: var(--ww-merge); } .ds-msg-merge { margin-top: 10px; font-weight: 600; }"
+    },
+    {
+      "name": "Lane Steps",
+      "kind": "custom",
+      "refersTo": "commit-node",
+      "description": "A role-colored vertical lane with ring nodes and title/detail steps.",
+      "html": "<div class=\"ds-lane\"><h3 class=\"ds-lane-title\">Para developers</h3><ol class=\"ds-steps\"><li class=\"ds-step\"><span class=\"ds-step-title\">Crea tu perfil</span><span class=\"ds-step-detail\">Tus datos de contacto y tu foto, listos para las empresas.</span></li><li class=\"ds-step\"><span class=\"ds-step-title\">Publica repositorios y proyectos</span><span class=\"ds-step-detail\">Agrupa cada proyecto en su repositorio.</span></li></ol></div>",
+      "css": ".ds-lane { --role: var(--ww-dev); --role-ink: var(--ww-dev-ink); font-family: var(--ww-font-display); color: var(--ww-ink); background: var(--ww-ground); } .ds-lane-title { margin: 0 0 28px; font-size: 1.5rem; font-weight: 700; color: var(--role-ink); } .ds-steps { list-style: none; margin: 0; padding: 0; position: relative; } .ds-steps::before { content: ''; position: absolute; left: calc(8px - var(--ww-line) / 2); top: 0; bottom: 0; width: var(--ww-line); background: var(--role); } .ds-step { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 0 0 36px 44px; } .ds-step::after { content: ''; position: absolute; left: 1px; top: 5px; width: 14px; height: 14px; border-radius: 50%; border: var(--ww-line) solid var(--role); background: var(--ww-ground); box-sizing: border-box; } .ds-step-title { font-size: 1.3125rem; font-weight: 650; line-height: 1.25; } .ds-step-detail { max-width: 44ch; font-size: 1.0625rem; line-height: 1.5; color: var(--ww-ink-soft); }"
+    },
+    {
+      "name": "Closing Door Panel",
+      "kind": "card",
+      "refersTo": "door-panel-dev",
+      "description": "Full-bleed square role panel with condensed display name and arrow; closes the page.",
+      "html": "<a class=\"ds-close ds-close-co\" href=\"#\"><span class=\"ds-close-name\">Soy empresa</span><span class=\"ds-close-line\">Publica ofertas y revisa trabajo real.</span><svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M4 10 H15 M10 5 L15 10 L10 15\"/></svg></a>",
+      "css": ".ds-close { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px 24px; min-height: 240px; padding: clamp(32px, 5vw, 64px) var(--ww-gutter); font-family: var(--ww-font-display); text-decoration: none; transition: filter 260ms var(--ww-ease-out); } .ds-close-co { background: var(--ww-co); color: #fff; } .ds-close-name { grid-column: 1; align-self: start; font-size: clamp(2.5rem, 5vw, 4.75rem); font-weight: 800; font-stretch: 88%; line-height: 0.95; letter-spacing: -0.035em; } .ds-close-line { grid-column: 1; font-size: 1.1875rem; line-height: 1.45; max-width: 30ch; } .ds-close svg { grid-column: 2; grid-row: 1 / span 2; width: 44px; height: 44px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform 220ms var(--ww-ease-out); } .ds-close:hover { filter: brightness(1.06); } .ds-close:hover svg { transform: translateX(4px); } .ds-close-co:focus-visible { outline: var(--ww-line) solid #fff; outline-offset: -8px; }"
+    },
+    {
+      "name": "Form Lane",
+      "kind": "form",
+      "refersTo": "input",
+      "description": "A form drawn as a lane: each field group is a commit whose node fills when valid; underline inputs; ink or role-colored submit pill.",
+      "html": "<form class=\"ds-lane-form\"><fieldset class=\"ds-commit is-done\"><legend class=\"ds-commit-title\">Tu cuenta</legend><label class=\"ds-field\"><span class=\"ds-label\">Usuario</span><input class=\"ds-input\" value=\"ana.torres\"></label></fieldset><fieldset class=\"ds-commit\"><legend class=\"ds-commit-title\">Contraseña</legend><label class=\"ds-field\"><span class=\"ds-label\">Contraseña</span><input class=\"ds-input is-invalid\" type=\"password\"><span class=\"ds-error\">Escribe tu contraseña.</span></label></fieldset><button class=\"ds-submit\" type=\"button\">Iniciar sesión</button></form>",
+      "css": ".ds-lane-form { --role: var(--ww-ink); --role-ink: var(--ww-ink); position: relative; display: grid; gap: 28px; padding-left: 44px; font-family: var(--ww-font-display); color: var(--ww-ink); background: var(--ww-ground); } .ds-lane-form::before { content: ''; position: absolute; left: calc(8px - var(--ww-line) / 2); top: 6px; bottom: 60px; width: var(--ww-line); background: var(--role); } .ds-commit { position: relative; display: grid; gap: 16px; margin: 0; padding: 0; border: 0; min-width: 0; } .ds-commit::before { content: ''; position: absolute; left: -43px; top: 3px; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: var(--ww-line) solid var(--role); background: var(--ww-ground); } .ds-commit.is-done::before { background: var(--role); } .ds-commit-title { float: left; width: 100%; margin: 0 0 14px; padding: 0; font-size: 1.3125rem; font-weight: 650; } .ds-commit-title ~ * { clear: both; } .ds-field { display: grid; gap: 6px; } .ds-label { font-size: 0.9375rem; font-weight: 600; } .ds-input { width: 100%; box-sizing: border-box; min-height: 48px; padding: 10px 2px; font: inherit; font-size: 1.0625rem; color: var(--ww-ink); background: transparent; border: 0; border-bottom: var(--ww-line) solid var(--ww-ink-soft); border-radius: 0; } .ds-input:hover { border-bottom-color: var(--ww-ink); } .ds-input:focus-visible { outline: none; border-bottom-color: var(--role-ink); background: var(--ww-ground-deep); } .ds-input.is-invalid { border-bottom-color: var(--ww-error); } .ds-error { font-size: 0.875rem; font-weight: 600; color: var(--ww-error); } .ds-submit { justify-self: start; min-height: 52px; padding: 0 26px; font: inherit; font-size: 1.0625rem; font-weight: 650; color: var(--ww-ground); background: var(--ww-ink); border: var(--ww-line) solid var(--ww-ink); border-radius: 999px; cursor: pointer; transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out); } .ds-submit:hover { background: transparent; color: var(--ww-ink); } .ds-submit:focus-visible { outline: var(--ww-line) solid var(--ww-ink); outline-offset: 3px; }"
+    },
+    {
+      "name": "Form Alert",
+      "kind": "alert",
+      "refersTo": "alert",
+      "description": "Square 3px Error Red frame with Error Red text; announced with role=alert.",
+      "html": "<p class=\"ds-alert\" role=\"alert\">Usuario o contraseña incorrectos.</p>",
+      "css": ".ds-alert { margin: 0; padding: 12px 16px; font-family: var(--ww-font-display); font-size: 1rem; font-weight: 600; color: var(--ww-error); border: var(--ww-line) solid var(--ww-error); background: var(--ww-ground); }"
+    },
+    {
+      "name": "Role Toggle",
+      "kind": "button",
+      "refersTo": "role-toggle-dev-pressed",
+      "description": "Two equal pills with aria-pressed that choose the registration role; the pressed one fills in its role color and the page follows.",
+      "html": "<div class=\"ds-roles\"><button type=\"button\" class=\"ds-role ds-role-dev\" aria-pressed=\"true\">Developer</button><button type=\"button\" class=\"ds-role ds-role-co\" aria-pressed=\"false\">Empresa</button></div>",
+      "css": ".ds-roles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; max-width: 560px; background: var(--ww-ground); } .ds-role { min-height: 52px; padding: 0 18px; font-family: var(--ww-font-display); font-size: 1.0625rem; font-weight: 650; background: transparent; border: var(--ww-line) solid currentColor; border-radius: 999px; cursor: pointer; transition: background-color 220ms var(--ww-ease-out), color 220ms var(--ww-ease-out); } .ds-role-dev { color: var(--ww-dev-ink); } .ds-role-dev[aria-pressed='true'] { background: var(--ww-dev); border-color: var(--ww-dev); color: var(--ww-ink); } .ds-role-co { color: var(--ww-co); } .ds-role-co[aria-pressed='true'] { background: var(--ww-co); border-color: var(--ww-co); color: #fff; } .ds-role:not([aria-pressed='true']):hover { background: var(--ww-ground-deep); } .ds-role-dev:focus-visible { outline: var(--ww-line) solid var(--ww-dev-ink); outline-offset: 3px; } .ds-role-co:focus-visible { outline: var(--ww-line) solid var(--ww-co); outline-offset: 3px; }"
+    },
+    {
+      "name": "Plan Column",
+      "kind": "card",
+      "refersTo": "commit-node",
+      "description": "A plan as a ruled column, not a card: name, price figure, two-up limits, benefits on a green lane drawn per item, green Elegir pill.",
+      "html": "<ul class=\"ds-plans\"><li class=\"ds-plan\"><h3 class=\"ds-plan-name\">Pro</h3><p class=\"ds-price\"><span class=\"ds-cur\">S/</span>19.90</p><dl class=\"ds-limits\"><div><dt>repositorios</dt><dd>10</dd></div><div><dt>proyectos</dt><dd>20</dd></div></dl><ul class=\"ds-benefits\"><li>Hasta 10 repositorios</li><li>Hasta 20 proyectos</li></ul></li></ul>",
+      "css": ".ds-plans { list-style: none; margin: 0; padding: 0; max-width: 360px; border-top: var(--ww-line) solid var(--ww-ink); font-family: var(--ww-font-display); color: var(--ww-ink); background: var(--ww-ground); } .ds-plan { display: flex; flex-direction: column; gap: 24px; padding: 32px 0 8px; } .ds-plan-name { margin: 0; font-size: 1.5rem; font-weight: 700; } .ds-price { margin: -12px 0 0; font-size: 3.25rem; font-weight: 750; font-stretch: 92%; line-height: 1; letter-spacing: -0.035em; font-variant-numeric: tabular-nums; } .ds-cur { margin-right: 0.12em; font-size: 0.45em; font-weight: 600; letter-spacing: 0; vertical-align: 0.9em; } .ds-limits { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0; padding: 16px 0; border-top: var(--ww-line) solid var(--ww-ground-deep); border-bottom: var(--ww-line) solid var(--ww-ground-deep); } .ds-limits div { display: flex; flex-direction: column-reverse; gap: 2px; } .ds-limits dt { font-size: 0.9375rem; color: var(--ww-ink-soft); } .ds-limits dd { margin: 0; font-size: 2rem; font-weight: 750; line-height: 1; color: var(--ww-dev-ink); } .ds-benefits { position: relative; display: grid; gap: 14px; margin: 0; padding: 0 0 0 32px; list-style: none; } .ds-benefits li { position: relative; font-size: 1.0625rem; line-height: 1.4; } .ds-benefits li::before { content: ''; position: absolute; left: -32px; top: 4px; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: var(--ww-line) solid var(--ww-dev); background: var(--ww-ground); } .ds-benefits li:not(:last-child)::after { content: ''; position: absolute; left: calc(-32px + 7px - var(--ww-line) / 2); top: 18px; bottom: -18px; width: var(--ww-line); background: var(--ww-dev); }"
+    },
+    {
+      "name": "Developer Sidebar Lane",
+      "kind": "nav",
+      "refersTo": "sidebar-stop",
+      "description": "The developer's navigation as their green lane; the active route fills its node.",
+      "html": "<nav class=\"ds-rail\"><ul><li><a class=\"ds-stop is-active\" href=\"#\">Inicio</a></li><li><a class=\"ds-stop\" href=\"#\">Carrito</a></li><li><a class=\"ds-stop\" href=\"#\">Tarjetas</a></li><li><a class=\"ds-stop\" href=\"#\">Perfil</a></li></ul></nav>",
+      "css": ".ds-rail { width: 200px; padding: 20px; font-family: var(--ww-font-display); background: var(--ww-ground); border-right: var(--ww-line) solid var(--ww-ink); } .ds-rail ul { position: relative; display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; } .ds-rail ul::before { content: ''; position: absolute; left: calc(7px - var(--ww-line) / 2); top: 22px; bottom: 22px; width: var(--ww-line); background: var(--ww-dev); } .ds-stop { position: relative; display: flex; align-items: center; min-height: 44px; padding-left: 34px; font-size: 1.0625rem; font-weight: 500; color: var(--ww-ink); text-decoration: none; text-decoration-thickness: var(--ww-line); text-underline-offset: 7px; } .ds-stop::before { content: ''; position: absolute; left: 0; top: 50%; width: 14px; height: 14px; margin-top: -7px; box-sizing: border-box; border-radius: 50%; border: var(--ww-line) solid var(--ww-dev); background: var(--ww-ground); } .ds-stop:hover { text-decoration-line: underline; text-decoration-color: var(--ww-dev); } .ds-stop.is-active { font-weight: 700; } .ds-stop.is-active::before { background: var(--ww-dev); } .ds-stop:focus-visible { outline: var(--ww-line) solid var(--ww-dev-ink); outline-offset: 3px; }"
+    },
+    {
+      "name": "Usage Meter",
+      "kind": "custom",
+      "refersTo": "usage-slot",
+      "description": "Plan quota as commit slots (filled = used) when limits are 12 or less; otherwise a proportional green lane over a Deep Concrete track ending in a hollow limit node.",
+      "html": "<div class=\"ds-meter\"><p class=\"ds-fig\"><strong>2</strong> de 3</p><p class=\"ds-mlabel\">repositorios</p><ol class=\"ds-slots\" aria-hidden=\"true\"><li class=\"is-used\"></li><li class=\"is-used\"></li><li></li></ol></div>",
+      "css": ".ds-meter { font-family: var(--ww-font-display); color: var(--ww-ink); background: var(--ww-ground); } .ds-fig { margin: 0; font-size: 1.1875rem; color: var(--ww-ink-soft); font-variant-numeric: tabular-nums; } .ds-fig strong { margin-right: 6px; font-size: 3.25rem; font-weight: 750; font-stretch: 92%; line-height: 1; letter-spacing: -0.03em; color: var(--ww-ink); } .ds-mlabel { margin: 2px 0 0; font-size: 1rem; color: var(--ww-ink-soft); } .ds-slots { position: relative; display: flex; justify-content: space-between; max-width: 320px; margin: 18px 0 0; padding: 0; list-style: none; } .ds-slots::before { content: ''; position: absolute; left: 7px; right: 7px; top: calc(7px - var(--ww-line) / 2); height: var(--ww-line); background: var(--ww-dev); } .ds-slots li { position: relative; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: var(--ww-line) solid var(--ww-dev); background: var(--ww-ground); } .ds-slots li.is-used { background: var(--ww-dev); }"
+    },
+    {
+      "name": "Offers Branch",
+      "kind": "custom",
+      "refersTo": "commit-node",
+      "description": "Open job offers on the developer dashboard as a short indigo branch, because they come from companies.",
+      "html": "<ul class=\"ds-jobs\"><li class=\"ds-job\"><p class=\"ds-job-title\">Frontend Angular</p><p class=\"ds-job-co\">Andes Software</p><p class=\"ds-job-meta\">2 vacantes · postula hasta el 30 oct</p></li><li class=\"ds-job\"><p class=\"ds-job-title\">Backend Spring</p><p class=\"ds-job-co\">Andes Software</p><p class=\"ds-job-meta\">1 vacante · postula hasta el 15 nov</p></li></ul>",
+      "css": ".ds-jobs { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; font-family: var(--ww-font-display); color: var(--ww-ink); background: var(--ww-ground); } .ds-job { position: relative; padding-left: 30px; } .ds-job p { margin: 0; } .ds-job::before { content: ''; position: absolute; left: 0; top: 4px; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: var(--ww-line) solid var(--ww-co); background: var(--ww-ground); z-index: 1; } .ds-job:not(:last-child)::after { content: ''; position: absolute; left: calc(7px - var(--ww-line) / 2); top: 18px; bottom: -26px; width: var(--ww-line); background: var(--ww-co); } .ds-job-title { font-size: 1.1875rem; font-weight: 700; line-height: 1.3; } .ds-job-co { margin-top: 2px !important; font-size: 1rem; font-weight: 600; color: var(--ww-co); } .ds-job-meta { margin-top: 6px !important; font-size: 0.9375rem; color: var(--ww-ink-soft); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Grafo de commits",
+    "overview": "WebWorks is told as git history. The developer owns a green branch, the company owns an indigo branch, and the two lanes run down the page until they merge in the application, marked by the only vermillion on the screen. Everything is drawn with one line: a single 3px ink stroke carries lanes, section dividers, borders, underlines, and focus outlines, so the page reads like one continuous diagram rather than a stack of cards.\n\nThe ground is flat concrete grey, the type is Bricolage Grotesque pushed to extreme scale and condensed width at the moment of pressure, and Martian Mono appears only where the git metaphor is literal: commit hashes and commit messages. Depth comes from full-bleed color blocks (the ink plan band, the green and indigo closing doors), never from shadows. Density is generous: sections breathe at up to 140px vertical padding, and the graph keeps a fixed 60px row rhythm.\n\nMotion is narrative, not decorative: on load the example history replays top to bottom, lane by lane, node by node, and the merge node lands last with a single expanding vermillion ring. Hovering or focusing a door highlights its own lane and dims the other.\n\nThe same metaphor carries past the landing. A form is a lane and each group of fields is a commit whose node fills once the group is valid. A plan's benefits are commits on the green branch. Inside the product, the developer's navigation is their own green lane, plan quotas are rows of commit slots, repositories read as a commit log, and job offers arrive as a short indigo branch from the companies.",
+    "keyCharacteristics": [
+      "One line weight (3px) for every stroke in the world.",
+      "One color per role: green is the developer, indigo is the company, vermillion is only the merge.",
+      "Circular commit nodes as the only round-dot vocabulary; pills for every interactive outline.",
+      "Flat depth; hierarchy through full-bleed color bands and type scale.",
+      "Monospace reserved for hashes and commit messages."
+    ],
+    "rules": [
+      {
+        "name": "The One Merge Rule",
+        "body": "Vermillion appears only on the merge node, where the two branches meet. It is never a button, a link, a highlight, or a heading color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Role Ownership Rule",
+        "body": "Green always means developer and indigo always means company, in lanes, doors, titles, and focus outlines. A role color never decorates content belonging to the other role or to neither.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-on-Green Rule",
+        "body": "Text on Branch Green is Graph Ink, not white; text on Signal Indigo is white. Green-as-text on the grey ground uses Deep Branch Green.",
+        "section": "colors"
+      },
+      {
+        "name": "The Neutral Door Rule",
+        "body": "A surface that serves both roles (login, the public plans) uses Graph Ink for its lane and submit button; it only takes a role color once the visitor has chosen a role.",
+        "section": "colors"
+      },
+      {
+        "name": "The Pressure Word Rule",
+        "body": "Extreme scale and condensed width are spent on one word per viewport, set against a light-weight run-in. Headlines below it stay at 750 and never compete.",
+        "section": "typography"
+      },
+      {
+        "name": "The Terminal Voice Rule",
+        "body": "Martian Mono is only for commit hashes and commit messages. It is never used for labels, captions, or UI chrome.",
+        "section": "typography"
+      },
+      {
+        "name": "The Drawn-Not-Lifted Rule",
+        "body": "Nothing floats. Separation is a line or a color block; if a surface needs to stand out, change its fill or draw a rule, never add a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Line Rule",
+        "body": "Every stroke is `--ww-line` (3px): lanes, curves, node borders, section dividers, pill borders, link underlines, focus outlines. Do not introduce a second structural weight.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** scope every public surface with the `.ww` class and read colors, line, fonts, easing, and gutter from the `--ww-*` custom properties.",
+      "**Do** draw every stroke at `--ww-line` (3px): dividers, pill borders, underlines, lanes, node rings, and focus outlines.",
+      "**Do** keep green for developer, indigo for company, and vermillion for the merge node only.",
+      "**Do** use `--ww-ease-out` (cubic-bezier(0.16, 1, 0.3, 1)) at 200-260ms for state changes, and gate entrance choreography behind `prefers-reduced-motion: no-preference`.",
+      "**Do** keep a focus-visible outline on every interactive element, in the role color where the element belongs to a role.",
+      "**Do** label example history as an example; commit rows carry illustrative data, not claims. The same goes for plan prices.",
+      "**Do** draw progress and quotas as commit nodes (a filled node is done or used, a hollow node is pending or free) before reaching for numbers alone.",
+      "**Do** give every data block its own loading, error and empty sentence, and never render limits or counts that have not loaded."
+    ],
+    "donts": [
+      "**Don't** add box-shadows or elevation; separate with the 3px line or a full-bleed color band.",
+      "**Don't** use vermillion on buttons, links, headings, or highlights.",
+      "**Don't** set white text on Branch Green or green text below Deep Branch Green on the grey ground.",
+      "**Don't** use Martian Mono for anything but commit hashes and messages.",
+      "**Don't** round section or band corners; radius is reserved for pills (999px) and circular nodes.",
+      "**Don't** carry the Angular Material indigo-pink palette or Roboto into `.ww` surfaces.",
+      "**Don't** box inputs or wrap plans and dashboard blocks in cards; a field is a 3px bottom rule and a group is separated by a line.",
+      "**Don't** use Error Red for anything but form errors and alerts."
+    ]
+  }
+}

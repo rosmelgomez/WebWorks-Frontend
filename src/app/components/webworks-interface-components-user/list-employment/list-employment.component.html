@@ -1,18 +1,20 @@
-<div class="container">
-
-    <mat-card appearance="outlined" class="card"  *ngFor="let item of dataSource.data">
-      <div class="information">
-        <h1>Job of {{item.companyName}}</h1>
-        <p> {{item.title}}</p>
-        <p> Position : {{item.position}}</p>
-        <p>{{item.description}}</p>
-        <p>Vacancies : {{item.vacancies}}</p>
-        <p>Postulation date Max : {{item.dateMaxPostulation | date:'dd/MM/yyyy' }}</p>
-      </div>
-      <mat-card-actions align="end">
-        <button mat-button (click)="applyAt(item.id)" [disabled]="check(item.id)" >Apply at</button>
-      </mat-card-actions>
-    </mat-card>
-
-</div>
-
+<section class="ww ww-page">
+  <header class="ww-page-header"><h1 class="ww-page-title">Empleos</h1></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando empleos...</p>
+  <p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <p class="ww-state" role="status" *ngIf="feedbackMessage">{{feedbackMessage}}</p>
+  <p class="ww-state" *ngIf="!isLoading && !loadError && dataSource.data.length === 0">No hay empleos disponibles.</p>
+  <ol class="ww-log ww-log-co" *ngIf="!isLoading && !loadError && dataSource.data.length > 0">
+    <li class="ww-log-item" *ngFor="let item of dataSource.data">
+      <h2 class="ww-log-title">Job of {{item.companyName}}</h2>
+      <p class="ww-log-body">{{item.title}}</p>
+      <p class="ww-log-meta">Position : {{item.position}}</p>
+      <p class="ww-log-body">{{item.description}}</p>
+      <p class="ww-log-meta">Vacancies : {{item.vacancies}}</p>
+      <p class="ww-log-meta">Postulation date Max : {{item.dateMaxPostulation | date:'dd/MM/yyyy' }}</p>
+      <p class="ww-state" role="status" *ngIf="applicationStatusLoading[item.id]">Cargando estado de postulación...</p>
+      <p class="ww-state" role="alert" *ngIf="applicationStatusErrors[item.id]">{{applicationStatusErrors[item.id]}}</p>
+      <div class="ww-actions"><button class="ww-button ww-button-co" type="button" (click)="applyAt(item.id)" [disabled]="applicationStatusLoading[item.id] || check(item.id)">Apply at</button></div>
+    </li>
+  </ol>
+</section>

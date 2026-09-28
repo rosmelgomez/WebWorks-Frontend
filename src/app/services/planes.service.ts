@@ -3,36 +3,36 @@ import { Injectable } from '@angular/core';
 import { Plan } from '../model/plan';
 import {Url} from "../model/url";
 
-const base_url = Url.urlBackend + '/webworks/planes';
+const base_url = Url.urlBackend + '/plan';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlanesService {
-
   constructor(private http: HttpClient) { }
 
-  getPlanes()  {
-    const endpoint = `${base_url}`;
-    return this.http.get<Plan[]>(endpoint);
+  getPlanes() {
+    return this.http.get<Plan[]>(base_url + '/getPlanes', { withCredentials: true });
   }
 
-  saveIdPlan(id:number){
-   localStorage.setItem('id', id.toString());
+  saveIdPlan(id: number) {
+    localStorage.setItem('idPlan', id.toString());
   }
-  savePricePlan(price:number){
-    localStorage.setItem('price', price.toString());
+
+  savePricePlan(price: number) {
+    localStorage.setItem('pricePlan', price.toString());
   }
-  getIdPlan(){
-    return localStorage.getItem('id')!
+
+  getIdPlan() {
+    return localStorage.getItem('idPlan')!
   }
+
   getPricePlan() {
-    return localStorage.getItem('price')!
+    return localStorage.getItem('pricePlan')!
   }
 
   deleteData() {
-    localStorage.removeItem('id');
-    localStorage.removeItem('price');
+    localStorage.removeItem('idPlan');
+    localStorage.removeItem('pricePlan');
   }
-
 }

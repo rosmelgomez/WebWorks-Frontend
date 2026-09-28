@@ -1,77 +1,64 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { Auth } from '../model/Auth';
+import { Session } from '../model/session';
 import {Url} from "../model/url";
 
-const base_url = Url.urlBackend + '/webworks/login';
+const base_url = Url.urlBackend;
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  // el backend guarda el jwt en cookies httpOnly; luego se consulta /me para obtener usuario y rol
   login(user: Auth) {
-    const endpoint = `${base_url}`;
-    this.logout()
-    return this.http.post<any>(endpoint, user).pipe(
-      tap(response => {
-        // Almacenar el token JWT en el almacenamiento local o de sesión
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('password',user.password.toString())
-        console.log(response.token);
+    this.clearSession();
+    return this.http.post(base_url + '/login', user, { withCredentials: true, responseType: 'text' }).pipe(
+      switchMap(() => this.http.get<Session>(base_url + '/me', { withCredentials: true })),
+      tap(session => {
+        localStorage.setItem('session', JSON.stringify(session));
       }));
   }
 
-  getRole(): string | null {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payload = token.split('.')[1];
-        const decodedPayload = JSON.parse(atob(payload));
+  // valida el api_token (cookie) contra el backend
+  apiToken() {
+    return this.http.get(base_url + '/api-token', { withCredentials: true, responseType: 'text' });
+  }
 
-        return decodedPayload['']; // Suponiendo que el campo 'role' está presente en el token
-      } catch (error) {
-        console.error('Error decoding token:', error);
-      }
+  getSession(): Session | null {
+    const raw = localStorage.getItem('session');
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as Session;
+    } catch {
+      return null;
     }
-    return null;}
+  }
+
+  getRole(): string | null {
+    return this.getSession()?.rol ?? null;
+  }
 
   getUser(): string | null {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payload = token.split('.')[1];
-        const decodedPayload = JSON.parse(atob(payload));
-
-        return decodedPayload.sub; // Suponiendo que el campo 'role' está presente en el token
-      } catch (error) {
-        console.error('Error decoding token:', error);
-      }}
-      return null;}
-
-  getPassword():string| null{
-    return localStorage.getItem('password')!;
+    return this.getSession()?.username ?? null;
   }
-
-  updatePassword(password:string){
-    localStorage.setItem('password',password);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token')!;}
 
   logout() {
-    // Eliminar el token JWT del almacenamiento local o de sesión
+    // el backend elimina las cookies; el cliente queda deslogueado aunque falle
+    this.http.post(base_url + '/logout-user', {}, { withCredentials: true, responseType: 'text' }).subscribe({ error: () => {} });
+    this.clearSession();
+  }
+
+  clearSession() {
+    localStorage.removeItem('session');
     localStorage.removeItem('password');
-    localStorage.removeItem('token');}
+  }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();}
-
+    return !!this.getSession();
+  }
 }
-
-

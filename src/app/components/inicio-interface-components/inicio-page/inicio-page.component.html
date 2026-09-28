@@ -1,43 +1,144 @@
-    <div class="container">
+<main class="ww page">
 
-        <div class="column1">
-            <h1>BIENVENIDO A WEBWORKS</h1>
-            <p>Webworks te ayuda alcanzar tus sueños</p>
-        </div>
-
-        <div class="column2">
-            <div class="columnCursoJava">
-                <h1>JAVASCRIP</h1>
-                <p>Compromiso con la calidad</p>
-            </div>
-            <div class="columnCursoCss">
-                <h1>CSS</h1>
-                <p>Un marco ideal</p>
-            </div>
-            <div class="columnCursoFrontend">
-                <h1>DESARROLLO FRONTEND</h1>
-                <p>Supero sus expectativas</p>
-            </div>
-        </div>
-
-        <div class="column3">
-            <div class="imagesPrecio">
-                <img class="img-Precio" src="/assets/imagenes/precio.jpg" alt="">
-            </div>
-            <div class="textoPrecio">
-                <h1>PRECIO COMPETITIVO</h1>
-                <h2>Calidad excepcional</h2>
-                <p>Esta es tu descripción de Características. Describe resumidamente la <br>
-                    característica que quieres destacar aquí y explica por qué es <br>
-                    importante para el servicio que prestas. No temas promocionar tu <br>
-                    imagen. Aprovecha esta sección para enfatizar los beneficios y <br>
-                    ventajas claves.
-                </p>
-                <button class="button" data-text="Awesome" [routerLink]="'/listPlanInicio'" >
-                    <span class="actual-text">&nbsp;Planes&nbsp;</span>
-                    <span aria-hidden="true" class="hover-text">&nbsp;Planes&nbsp;</span>
-                </button>
-            </div>
-        </div>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <h1 id="hero-title" class="hero-title">
+        <span class="quiet">El portafolio respalda la</span>
+        <span class="pressure">postulación.</span>
+      </h1>
+      <p class="hero-lede">
+        En WebWorks los developers publican sus repositorios y proyectos, y las empresas
+        revisan ese trabajo antes de aceptar a alguien.
+      </p>
+      <p class="hero-login">
+        ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+      </p>
     </div>
 
+    <div class="graph" [attr.data-focus]="focusLane()">
+      <div class="doors">
+        <a class="door door-dev" routerLink="/registrar" [queryParams]="{ tipo: 'developer' }"
+           (mouseenter)="setFocus('dev')" (mouseleave)="setFocus(null)"
+           (focus)="setFocus('dev')" (blur)="setFocus(null)">
+          Soy developer
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+        </a>
+        <a class="door door-co" routerLink="/registrar" [queryParams]="{ tipo: 'empresa' }"
+           (mouseenter)="setFocus('co')" (mouseleave)="setFocus(null)"
+           (focus)="setFocus('co')" (blur)="setFocus(null)">
+          Soy empresa
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+        </a>
+      </div>
+
+      <ol class="rows" aria-label="Historial de ejemplo de una contratación en WebWorks">
+        @for (row of graph; track row.hash ?? $index; let i = $index) {
+          <li [class]="'row row-' + row.kind + (row.lane ? ' on-' + row.lane : '')"
+              [style.--i]="i">
+            @switch (row.kind) {
+              @case ('pair') {
+                <span class="node node-dev"></span>
+                <span class="msg msg-dev"><span class="hash">{{ row.dev!.hash }}</span>{{ row.dev!.message }}</span>
+                <span class="msg msg-co"><span class="hash">{{ row.co!.hash }}</span>{{ row.co!.message }}</span>
+                <span class="node node-co"></span>
+              }
+              @case ('commit') {
+                <span class="node" [class.node-dev]="row.lane === 'dev'" [class.node-co]="row.lane === 'co'"></span>
+                <span class="msg" [class.msg-dev]="row.lane === 'dev'" [class.msg-co]="row.lane === 'co'">
+                  <span class="hash">{{ row.hash }}</span>{{ row.message }}
+                </span>
+              }
+              @case ('branch') {
+                <svg class="curve" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0 0 C0 55 100 45 100 100" />
+                </svg>
+                <span class="node node-dev node-branch"></span>
+                <span class="msg msg-branch"><span class="hash">{{ row.hash }}</span>{{ row.message }}</span>
+              }
+              @case ('merge') {
+                <span class="fork">
+                  <svg class="curve curve-merge" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                    <path class="from-dev" d="M0 0 C0 60 50 40 50 100" />
+                    <path class="from-co" d="M100 0 C100 60 50 40 50 100" />
+                  </svg>
+                  <span class="node node-merge"></span>
+                </span>
+                <span class="msg msg-merge"><span class="hash">{{ row.hash }}</span>{{ row.message }}</span>
+              }
+            }
+          </li>
+        }
+      </ol>
+      <p class="graph-note">Historial de ejemplo</p>
+    </div>
+  </section>
+
+  <section id="como-funciona" class="how" aria-labelledby="how-title">
+    <h2 id="how-title" class="section-title">Dos ramas que se encuentran.</h2>
+    <p class="section-lede">
+      Cada lado trabaja en lo suyo. WebWorks junta las dos historias en el momento de la postulación.
+    </p>
+
+    <div class="lanes">
+      <div class="lane lane-dev">
+        <h3 class="lane-title">Para developers</h3>
+        <ol class="steps">
+          @for (step of developerSteps; track step.title) {
+            <li class="step">
+              <span class="step-title">{{ step.title }}</span>
+              <span class="step-detail">{{ step.detail }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+
+      <div class="lane lane-co">
+        <h3 class="lane-title">Para empresas</h3>
+        <ol class="steps">
+          @for (step of companySteps; track step.title) {
+            <li class="step">
+              <span class="step-title">{{ step.title }}</span>
+              <span class="step-detail">{{ step.detail }}</span>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+
+    <div class="join" aria-hidden="true">
+      <svg class="join-fork" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path class="from-dev" d="M0 0 C0 60 50 40 50 100" />
+        <path class="from-co" d="M100 0 C100 60 50 40 50 100" />
+      </svg>
+      <span class="join-node"></span>
+    </div>
+    <p class="join-caption">La postulación llega a la empresa con el portafolio adjunto.</p>
+  </section>
+
+  <section class="plan" aria-labelledby="plan-title">
+    <h2 id="plan-title" class="plan-title">
+      Empieza con <strong>3 repositorios</strong> y <strong>2 proyectos</strong>, sin pagar.
+    </h2>
+    <p class="plan-copy">
+      Ese es el plan gratuito para developers. Cuando tu portafolio crezca, un plan de pago amplía el límite.
+    </p>
+    <a class="plan-link" routerLink="/listPlanInicio">
+      Ver planes
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+    </a>
+  </section>
+
+  <section class="close" aria-label="Crear una cuenta">
+    <a class="close-door close-dev" routerLink="/registrar" [queryParams]="{ tipo: 'developer' }">
+      <span class="close-name">Soy developer</span>
+      <span class="close-line">Publica tu portafolio y postula con él.</span>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+    </a>
+    <a class="close-door close-co" routerLink="/registrar" [queryParams]="{ tipo: 'empresa' }">
+      <span class="close-name">Soy empresa</span>
+      <span class="close-line">Publica ofertas y revisa trabajo real.</span>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10 H15 M10 5 L15 10 L10 15" /></svg>
+    </a>
+  </section>
+
+</main>

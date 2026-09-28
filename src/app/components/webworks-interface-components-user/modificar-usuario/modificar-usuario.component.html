@@ -1,81 +1,19 @@
-<div class="conteiner">
-
-    <form [formGroup]="updateProfileForm" autocomplete="off" class="form-container">
-      <H1>Actualizar Datos </H1>
-
-      <div class="file">
-        <img [src]="urlPhoto"  alt="" width="200" height="200" id="img">
-        <label for="archivo">Elige una imagen</label>
-        <input type="file" (change)="captureImage($event)"  id="archivo">
+<section class="ww ww-page ww-form-page">
+  <header class="ww-page-header"><h1 class="ww-page-title">Actualizar Datos</h1></header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando datos...</p><p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <form [formGroup]="updateProfileForm" autocomplete="off" class="ww-form" (ngSubmit)="update()" *ngIf="!isLoading && !loadError">
+    <fieldset class="ww-lane">
+      <div class="ww-commit"><h2 class="ww-commit-title">Imagen</h2><div class="photo-field"><img class="ww-photo-preview" [src]="urlPhoto" alt=""><label class="ww-action" for="archivo">Elige una imagen</label><input class="file-input" type="file" (change)="captureImage($event)" id="archivo"></div></div>
+      <div class="ww-commit" [class.is-done]="updateProfileForm.get('name')?.valid && updateProfileForm.get('lastname')?.valid">
+        <h2 class="ww-commit-title">Datos personales</h2><div class="ww-row"><label class="ww-field"><span class="ww-label">Name</span><input class="ww-input" type="text" placeholder="name" formControlName="name" required></label><label class="ww-field"><span class="ww-label">LastName</span><input class="ww-input" type="text" placeholder="lastname" formControlName="lastname" required></label></div>
+        <div class="ww-row"><label class="ww-field"><span class="ww-label">Phone</span><input class="ww-input" type="text" placeholder="Phone number" formControlName="phone" required></label><label class="ww-field"><span class="ww-label">Fecha Nacimiento</span><input class="ww-input" type="date" formControlName="birthDate"><span class="ww-hint">MM/DD/YYYY</span></label></div>
       </div>
-
-      <div class="conteniner_Datos">
-        <mat-form-field class="matIzquierdo">
-          <mat-label>Name</mat-label>
-          <input matInput type="text" placeholder="name" formControlName="name" required>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-          <mat-label>LastName</mat-label>
-          <input matInput type="text" placeholder="lastname" formControlName="lastname" required>
-        </mat-form-field>
+      <div class="ww-commit" [class.is-done]="updateProfileForm.get('email')?.valid && updateProfileForm.get('username')?.valid"><h2 class="ww-commit-title">Cuenta</h2><label class="ww-field"><span class="ww-label">Email</span><input class="ww-input" type="email" placeholder="email@" formControlName="email" required></label><label class="ww-field"><span class="ww-label">Username</span><input class="ww-input" type="text" placeholder="username" formControlName="username" required></label></div>
+      <div class="ww-commit" [class.is-done]="updateProfileForm.get('newPassword')?.valid && updateProfileForm.get('password')?.valid"><h2 class="ww-commit-title">Contraseñas</h2>
+        <label class="ww-field"><span class="ww-label">New Password</span><span class="ww-password"><input class="ww-input" [type]="hideNewPassword() ? 'password' : 'text'" placeholder="newPassword" formControlName="newPassword" required><button class="ww-reveal" type="button" (click)="clickEventNewPassword($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideNewPassword()"><span aria-hidden="true">◉</span></button></span></label>
+        <label class="ww-field"><span class="ww-label">Password</span><span class="ww-password"><input class="ww-input" [type]="hide() ? 'password' : 'text'" placeholder="password" formControlName="password" required><button class="ww-reveal" type="button" (click)="clickEvent($event)" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide()"><span aria-hidden="true">◉</span></button></span></label>
       </div>
-
-      <div class="conteniner_Datos">
-        <mat-form-field class="matIzquierdo">
-          <mat-label>Phone</mat-label>
-          <input matInput type="text" placeholder="Phone number" formControlName="phone" required>
-        </mat-form-field>
-        <mat-form-field class="example-full-width">
-          <mat-label>Fecha Nacimiento</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="birthDate">
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-
-
-        <mat-form-field class="example-full-width">
-            <mat-label>Email</mat-label>
-            <input matInput type="email" placeholder="email@" formControlName="email" required>
-        </mat-form-field>
-
-        <mat-form-field class="example-full-width">
-            <mat-label>Username</mat-label>
-            <input matInput type="text" placeholder="username" formControlName="username" required>
-        </mat-form-field>
-
-       <mat-form-field class="example-full-width" style="color: black">
-        <mat-label>New Password</mat-label>
-        <input matInput [type]="hideNewPassword() ? 'password' : 'text'" placeholder="newPassword" formControlName="newPassword" required/>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEventNewPassword($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hideNewPassword()"
-        >
-          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-       </mat-form-field>
-
-       <mat-form-field class="example-full-width" style="color: black">
-        <mat-label>Password</mat-label>
-        <input matInput [type]="hide() ? 'password' : 'text'" placeholder="password" formControlName="password" required/>
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="clickEvent($event)"
-          [attr.aria-label]="'Hide password'"
-          [attr.aria-pressed]="hide()"
-        >
-          <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-       </mat-form-field>
-
-       <button class="button" color="primary" (click)="update()" >Update</button>
-
-    </form>
-
-</div>
+    </fieldset>
+    <div class="ww-form-actions"><button class="ww-button ww-button-dev" type="submit">Update</button></div>
+  </form>
+</section>

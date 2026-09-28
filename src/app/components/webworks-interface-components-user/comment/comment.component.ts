@@ -1,17 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {MatButtonModule} from "@angular/material/button";
-import {MatCardModule,} from "@angular/material/card";
+import {Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {RouterModule} from "@angular/router";
-import {MatInputModule} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatToolbarModule} from "@angular/material/toolbar";
-import {MatIconModule} from "@angular/material/icon";
-import {MatDatepickerModule} from "@angular/material/datepicker";
-import {MatNativeDateModule} from "@angular/material/core";
 import {UserService} from "../../../services/user.service";
 import {User} from "../../../model/user";
-import {MatTableDataSource} from "@angular/material/table";
 import {CommentProfile} from "../../../model/commentProfile";
 import {CommentProfileService} from "../../../services/commentprofile.service";
 import {SystemScoreService} from "../../../services/systemscore.service";
@@ -19,19 +11,13 @@ import {SystemScore} from "../../../model/systemScore";
 import {CommentProfileSummary} from "../../../modelComplement/commentProfileSummary";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-comment',
   standalone: true,
   imports: [
     CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
     RouterModule,
-    MatIconModule,
-    MatInputModule,
     ReactiveFormsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatCardModule,
   ],
   templateUrl: './comment.component.html',
   styleUrl: './comment.component.css'
@@ -39,9 +25,13 @@ import {CommentProfileSummary} from "../../../modelComplement/commentProfileSumm
 
 export class CommentComponent implements OnInit {
   public commentForm!: FormGroup
-  users=new MatTableDataSource<User>
+  users = { data: [] as User[] }
   comments:{[key:number]:CommentProfileSummary[]}={}
   commentsCheck:{[key:number]:Boolean}={}
+  commentsLoading: {[key: number]: boolean} = {}
+  commentsError: {[key: number]: string} = {}
+  isLoading = true;
+  loadError = '';
 
   constructor(
     private fb: FormBuilder,
@@ -60,15 +50,20 @@ export class CommentComponent implements OnInit {
       comment: ['', Validators.required],
       score: ['', Validators.required]
     })
-    this.userService.gerAllUsers().subscribe(
-      (users:User[])=>{
+    this.isLoading = true;
+    this.loadError = '';
+    this.userService.gerAllUsers().subscribe({
+      next: (users:User[])=>{
         this.users.data = users;
         this.users.data = this.users.data.filter((user: User) => user.id !== parseInt(this.userService.getId()));
+        this.isLoading = false;
         users.forEach((user) => {
           this.getComment(user.id);
         });
-      }
-    )
+      }, error: () => {
+        this.isLoading = false;
+        this.loadError = 'No se pudieron cargar los perfiles.';
+      }})
   }
 
   check(): string{
@@ -76,16 +71,20 @@ export class CommentComponent implements OnInit {
   }
 
   getComment(idUser:number) {
-    this.commentService.getComment(idUser).subscribe(
-      (comments:CommentProfileSummary[])=>{
+    this.commentsLoading[idUser] = true;
+    this.commentsError[idUser] = '';
+    this.commentService.getComment(idUser).subscribe({
+      next: (comments:CommentProfileSummary[])=>{
         this.comments[idUser]=comments;
         this.commentsCheck[idUser]=false;
-      }
-    )
+        this.commentsLoading[idUser] = false;
+      }, error: () => {
+        this.commentsLoading[idUser] = false;
+        this.commentsError[idUser] = 'No se pudieron cargar los comentarios.';
+      }})
   }
 
   createComment(idUserComment:number) {
-    console.log(this.commentForm.value);
     if(this.commentForm.valid){
       const comment : CommentProfile ={
         id:0,

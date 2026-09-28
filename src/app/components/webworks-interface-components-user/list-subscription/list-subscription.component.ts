@@ -1,25 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {CommonModule} from "@angular/common";
-import {MatTableDataSource, MatTableModule} from "@angular/material/table";
-import { MatIconModule} from "@angular/material/icon";
-import {MatButtonModule} from "@angular/material/button";
-import { MatInputModule} from "@angular/material/input";
-import { MatTooltipModule} from "@angular/material/tooltip";
 import { RouterModule} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {SubscriptionService} from "../../../services/subscription.service";
 import {SubscriptionSummary} from "../../../modelComplement/subscriptionSummary";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
   selector: 'app-list-subscription',
   standalone: true,
   imports: [
-    MatTableModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTooltipModule,
     RouterModule,
-    MatInputModule,
     CommonModule,
   ],
   templateUrl: './list-subscription.component.html',
@@ -27,7 +18,9 @@ import {SubscriptionSummary} from "../../../modelComplement/subscriptionSummary"
 })
 export class ListSubscriptionComponent implements OnInit {
   displayedColumns: string[] = ['dateStart', 'dateEnd', 'amountTotal','namePlan','numberMethodPayment','namePromotionCode','discountPercentage'];
-  dataSource = new MatTableDataSource<SubscriptionSummary>();
+  dataSource = { data: [] as SubscriptionSummary[] };
+  isLoading = true;
+  loadError = '';
 
   constructor(
     private userService: UserService,
@@ -40,11 +33,16 @@ export class ListSubscriptionComponent implements OnInit {
   }
 
   getSubscriptions(){
-    this.subscriptionService.getSubscriptions(parseInt(this.userService.getId())).subscribe(
-      (subscriptions:SubscriptionSummary[])=>{
+    this.isLoading = true;
+    this.loadError = '';
+    this.subscriptionService.getSubscriptions(parseInt(this.userService.getId())).subscribe({
+      next: (subscriptions:SubscriptionSummary[])=>{
         this.dataSource.data = subscriptions;
-      }
-    )
+        this.isLoading = false;
+      }, error: () => {
+        this.isLoading = false;
+        this.loadError = 'No se pudieron cargar las suscripciones.';
+      }})
   }
 
 }

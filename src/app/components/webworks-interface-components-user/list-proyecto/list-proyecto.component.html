@@ -1,62 +1,17 @@
-<div class="conteiner">
-
-  <div class="form-container">
-    <h1>LISTA DE PROYECTOS DE : {{name}} </h1>
-    <h2>Numero de proyectos Permitidos : {{numProjects}}</h2>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-      </ng-container>
-
-      <!-- Weight Column -->
-      <ng-container matColumnDef="dateCreate">
-        <th mat-header-cell *matHeaderCellDef> Fecha Creado </th>
-        <td mat-cell *matCellDef="let element"> {{element.dateCreate | date:'dd/MM/yyyy'}} </td>
-      </ng-container>
-
-      <!-- Symbol Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef> Descripcion </th>
-        <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-      </ng-container>
-
-      <!-- Symbol Column -->
-      <ng-container matColumnDef="language">
-        <th mat-header-cell *matHeaderCellDef> Lenguaje </th>
-        <td mat-cell *matCellDef="let element"> {{element.language}} </td>
-      </ng-container>
-
-      <!-- Acciones Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let element;">
-          <button mat-icon-button color="primary" (click)="saveId(element.id)">
-            <mat-icon aria-label="Edit">edit</mat-icon>
-          </button>
-
-          <button mat-icon-button color="primary" (click)="delete(element.id)">
-            <mat-icon aria-label="Delete">delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-    <button class="shadow__btn" (click)="deleteIdSave()">
-      Agrege Proyectos
-    </button>
-
-    <button class="shadow__btn" (click)="deleteDateTotal()"  routerLink="/listRepositorio">
-      Ver Repositorios
-    </button>
-
-  </div>
-
-  <div id="chart"></div>
-
-</div>
+<section class="ww ww-page">
+  <header class="ww-page-header">
+    <div><h1 class="ww-page-title">LISTA DE PROYECTOS DE : {{name}}</h1><p class="ww-page-subtitle">Numero de proyectos Permitidos : {{numProjects}}</p></div>
+    <div class="ww-actions"><button class="ww-button ww-button-dev" type="button" (click)="deleteIdSave()">Agrege Proyectos</button><a class="ww-button ww-button-outline" (click)="deleteDateTotal()" routerLink="/listRepositorio">Ver Repositorios</a></div>
+  </header>
+  <p class="ww-state" role="status" *ngIf="isLoading">Cargando proyectos...</p>
+  <p class="ww-state" role="alert" *ngIf="loadError">{{loadError}}</p>
+  <p class="ww-state" *ngIf="!isLoading && !loadError && dataSource.data.length === 0">No hay proyectos registrados.</p>
+  <table class="ww-data-table" *ngIf="!isLoading && !loadError && dataSource.data.length > 0">
+    <thead><tr><th>Name</th><th>Fecha Creado</th><th>Descripcion</th><th>Lenguaje</th><th>Actions</th></tr></thead>
+    <tbody><tr *ngFor="let element of dataSource.data">
+      <td data-label="Name">{{element.name}}</td><td data-label="Fecha Creado">{{element.dateCreate | date:'dd/MM/yyyy'}}</td><td data-label="Descripcion">{{element.description}}</td><td data-label="Lenguaje">{{element.language}}</td>
+      <td data-label="Actions"><div class="ww-table-actions"><button class="ww-action role-dev" type="button" (click)="saveId(element.id)">Edit</button><button class="ww-action" type="button" (click)="delete(element.id)">Delete</button></div></td>
+    </tr></tbody>
+  </table>
+  <div id="chart" class="chart" aria-label="Proyecto"></div>
+</section>

@@ -1,23 +1,29 @@
-<mat-toolbar class="conteinerNavbar">
+<header class="ww nav" [class.is-open]="menuOpen()">
+  <a class="brand" routerLink="/pageInicio" (click)="closeMenu()" aria-label="WebWorks, inicio">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <path class="lane-dev" d="M8 3 V14 C8 21 16 21 16 27" />
+      <path class="lane-co" d="M24 3 V14 C24 21 16 21 16 27" />
+      <circle class="node" cx="16" cy="27" r="4" />
+    </svg>
+    <span>WebWorks</span>
+  </a>
 
-  <mat-toolbar class="conteiner">
+  <button class="menu-toggle" type="button" (click)="toggleMenu()"
+          [attr.aria-expanded]="menuOpen()" aria-controls="nav-publica">
+    <span class="sr-only">{{ menuOpen() ? 'Cerrar menú' : 'Abrir menú' }}</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      @if (menuOpen()) {
+        <path d="M5 5 L19 19 M19 5 L5 19" />
+      } @else {
+        <path d="M4 7 H20 M4 12 H20 M4 17 H20" />
+      }
+    </svg>
+  </button>
 
-    <span class="webworks-link" [routerLink]="'/'"> WebWorks </span>
-
-    <span class="example-spacer"></span>
-
-    <div class="contenidoCheck">
-      <button mat-icon-button  aria-label="Example icon-button with menu icon"  (click)="toggleMenu()">
-        <mat-icon>menu</mat-icon>
-      </button>
-    </div>
-    <div class="contenidoButon">
-    <button class="buttones" mat-raised-button color="primary" [routerLink]="'/login'" (click)="eliminar()">Iniciar Sesion</button>
-    <button class="buttones" mat-raised-button color="primary" [routerLink]="'/registrar'" (click)="eliminar()">Registrarse</button>
-    <button class="buttones" mat-raised-button color="primary" [routerLink]="'/listPlanInicio'" (click)="eliminar()">Planes</button>
-    <button class="buttones" mat-raised-button color="primary" [routerLink]="'/'" (click)="eliminar()">Acerca de Nosotros</button>
-    </div>
-
-  </mat-toolbar>
-
-</mat-toolbar>
+  <nav id="nav-publica" class="links" aria-label="Navegación principal">
+    <button type="button" class="link" (click)="goToHowItWorks()">Cómo funciona</button>
+    <a class="link" routerLink="/listPlanInicio" routerLinkActive="is-active" (click)="closeMenu()">Planes</a>
+    <a class="link" routerLink="/login" routerLinkActive="is-active" (click)="closeMenu()">Iniciar sesión</a>
+    <a class="cta" routerLink="/registrar" (click)="closeMenu()">Crear cuenta</a>
+  </nav>
+</header>
